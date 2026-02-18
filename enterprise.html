@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NECLID - Plateforme Intelligence Réseau Affilié</title>
+    <title>NECLID - Affiliate Network Intelligence Platform</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
         * {
@@ -13,19 +13,19 @@
         }
 
         :root {
-            --primary: #2563EB;
-            --primary-dark: #1D4ED8;
-            --primary-light: #E0E7FF;
-            --secondary: #7C3AED;
-            --success: #16A34A;
-            --warning: #EA8C55;
-            --error: #DC2626;
-            --bg-dark: #F8FAFC;
-            --bg-card: #FFFFFF;
-            --bg-hover: #F1F5F9;
-            --text-primary: #0F172A;
-            --text-secondary: #64748B;
-            --border: #E2E8F0;
+            --primary: #0066FF;
+            --primary-dark: #0052CC;
+            --primary-light: #E6F0FF;
+            --secondary: #6F42C1;
+            --success: #00B341;
+            --warning: #FFB81C;
+            --error: #FF3333;
+            --bg-dark: #0A0E27;
+            --bg-card: #111633;
+            --bg-hover: #1A1F3A;
+            --text-primary: #FFFFFF;
+            --text-secondary: #A0AAC3;
+            --border: #252D45;
         }
 
         body {
@@ -37,7 +37,7 @@
 
         /* ===== HEADER ===== */
         header {
-            background: linear-gradient(90deg, #FFFFFF 0%, #F8FAFC 100%);
+            background: linear-gradient(90deg, var(--bg-card) 0%, var(--bg-dark) 100%);
             border-bottom: 1px solid var(--border);
             padding: 20px 40px;
             display: flex;
@@ -46,7 +46,6 @@
             position: sticky;
             top: 0;
             z-index: 1000;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
 
         .logo {
@@ -111,13 +110,12 @@
 
         /* ===== HEALTH SCORE ===== */
         .health-score-container {
-            background: linear-gradient(135deg, #FFFFFF 0%, #F1F5F9 100%);
+            background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-hover) 100%);
             border: 1px solid var(--border);
             border-radius: 16px;
             padding: 40px;
             margin-bottom: 40px;
             text-align: center;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
 
         .health-label {
@@ -328,7 +326,7 @@
         <div class="header-actions">
             <div class="status-badge live">
                 <span class="status-indicator"></span>
-                <span>Réseau Actif</span>
+                <span>Network Live</span>
             </div>
         </div>
     </header>
@@ -337,29 +335,29 @@
     <div class="container">
         <!-- HEALTH SCORE -->
         <div class="health-score-container">
-            <div class="health-label">Score de Santé du Réseau</div>
+            <div class="health-label">Network Health Score</div>
             <div class="health-score" id="healthScore">94</div>
-            <div class="health-description">Performance Excellente</div>
+            <div class="health-description">Excellent Performance</div>
             <div class="health-bar">
                 <div class="health-fill" id="healthFill" style="width: 94%;"></div>
             </div>
         </div>
 
         <!-- SECTION: CORE METRICS -->
-        <div class="section-title">📊 Métriques Principales</div>
+        <div class="section-title">📊 Core Metrics</div>
         <div class="kpi-grid" id="kpiGrid"></div>
 
         <!-- SECTION: PERFORMANCE CHARTS -->
-        <div class="section-title">📈 Tendances de Performance</div>
+        <div class="section-title">📈 Performance Trends</div>
         <div class="grid-2">
             <div class="chart-container">
-                <div class="chart-title">Taux de Production de Contenu</div>
+                <div class="chart-title">Content Production Rate</div>
                 <div class="chart-wrapper">
                     <canvas id="productionChart"></canvas>
                 </div>
             </div>
             <div class="chart-container">
-                <div class="chart-title">Distribution des Blogs</div>
+                <div class="chart-title">Blog Distribution</div>
                 <div class="chart-wrapper">
                     <canvas id="distributionChart"></canvas>
                 </div>
@@ -367,18 +365,18 @@
         </div>
 
         <!-- SECTION: BLOG HEALTH REPORT -->
-        <div class="section-title">🏥 Rapport de Santé des Blogs</div>
+        <div class="section-title">🏥 Blog Health Report</div>
         <div class="table-container">
             <table>
                 <thead>
                     <tr>
                         <th>Blog</th>
-                        <th>Score Santé</th>
+                        <th>Health Score</th>
                         <th>Articles</th>
-                        <th>Diversité Catégorie</th>
-                        <th>Fréquence MAJ</th>
-                        <th>Maturité SEO</th>
-                        <th>Statut</th>
+                        <th>Category Diversity</th>
+                        <th>Update Frequency</th>
+                        <th>SEO Maturity</th>
+                        <th>Status</th>
                     </tr>
                 </thead>
                 <tbody id="blogHealthTable"></tbody>
@@ -386,11 +384,11 @@
         </div>
 
         <!-- SECTION: GROWTH ANALYTICS -->
-        <div class="section-title">🚀 Analytics de Croissance</div>
+        <div class="section-title">🚀 Growth Analytics</div>
         <div class="kpi-grid" id="growthGrid"></div>
 
         <!-- SECTION: RECOMMENDATIONS -->
-        <div class="section-title">💡 Recommandations IA</div>
+        <div class="section-title">💡 AI Recommendations</div>
         <div class="chart-container">
             <div id="recommendationsList"></div>
         </div>
@@ -398,8 +396,8 @@
 
     <!-- FOOTER -->
     <footer>
-        <div class="footer-text">Tableau de Bord Analytics Enterprise NECLID • Intelligence Réseau en Temps Réel</div>
-        <div class="footer-text" style="margin-top: 10px; font-size: 0.75em;">© 2026 NECLID. Propulsé par Ilane Tall</div>
+        <div class="footer-text">NECLID Enterprise Analytics Dashboard • Real-time Network Intelligence</div>
+        <div class="footer-text" style="margin-top: 10px; font-size: 0.75em;">© 2026 NECLID. Powered by Ilane Tall</div>
     </footer>
 
     <script>
@@ -440,10 +438,10 @@
             const avgHealthScore = blogs.reduce((sum, b) => sum + calculateBlogHealth(b), 0) / blogs.length;
 
             const kpis = [
-                { label: 'Taille du Réseau', value: blogs.length, change: '+100%', unit: 'Blogs Actifs' },
-                { label: 'Actifs de Contenu', value: totalArticles, change: '+2 aujourd\'hui', unit: 'Articles Total' },
-                { label: 'Santé Réseau', value: Math.round(avgHealthScore), change: 'Excellent', unit: '%' },
-                { label: 'Couverture Marché', value: '2', change: 'Verticales', unit: 'Niches' }
+                { label: 'Network Size', value: blogs.length, change: '+100%', unit: 'Active Blogs' },
+                { label: 'Content Assets', value: totalArticles, change: '+2 today', unit: 'Total Articles' },
+                { label: 'Network Health', value: Math.round(avgHealthScore), change: 'Excellent', unit: '%' },
+                { label: 'Market Coverage', value: '2', change: 'Verticals', unit: 'Niches' }
             ];
 
             document.getElementById('kpiGrid').innerHTML = kpis.map(kpi => `
@@ -459,10 +457,10 @@
         function renderGrowthGrid() {
             const blogs = dashboardData.blogs || [];
             const growthKpis = [
-                { label: 'Articles/Semaine', value: '2', trend: '+50%', unit: 'Cible: 3' },
-                { label: 'Vélocité Contenu', value: '1.5', trend: 'Stable', unit: 'Articles/Blog' },
-                { label: 'Diversification', value: '4', trend: '+1', unit: 'Types Catégorie' },
-                { label: 'Efficacité Réseau', value: '92%', trend: 'Optimal', unit: 'En Schedule' }
+                { label: 'Articles/Week', value: '2', trend: '+50%', unit: 'Target: 3' },
+                { label: 'Content Velocity', value: '1.5', trend: 'Steady', unit: 'Articles/Blog' },
+                { label: 'Diversification', value: '4', trend: '+1', unit: 'Category Types' },
+                { label: 'Network Efficiency', value: '92%', trend: 'Optimal', unit: 'On Schedule' }
             ];
 
             document.getElementById('growthGrid').innerHTML = growthKpis.map(kpi => `
@@ -492,9 +490,9 @@
                         <td><span class="metric-badge excellent">${health}%</span></td>
                         <td>${articleCount}</td>
                         <td><span class="metric-badge good">${categories.size} types</span></td>
-                        <td>${daysAgo === 0 ? 'Aujourd\'hui' : daysAgo + 'j'}</td>
+                        <td>${daysAgo === 0 ? 'Today' : daysAgo + 'd ago'}</td>
                         <td><span class="metric-badge ${health >= 85 ? 'excellent' : 'good'}">Tier ${health >= 90 ? 'A' : 'B'}</span></td>
-                        <td><span class="metric-badge excellent">✓ Actif</span></td>
+                        <td><span class="metric-badge excellent">✓ Active</span></td>
                     </tr>
                 `;
             }).join('');
@@ -506,9 +504,9 @@
             new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: ['Sem 1', 'Sem 2', 'Sem 3', 'Sem 4'],
+                    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
                     datasets: [{
-                        label: 'Articles Publiés',
+                        label: 'Articles Published',
                         data: [4, 3, 4, 2],
                         backgroundColor: [
                             'rgba(0, 102, 255, 0.8)',
@@ -563,10 +561,10 @@
         // Render Recommendations
         function renderRecommendations() {
             const recommendations = [
-                { icon: '📈', title: 'Augmenter le Taux de Production', desc: 'Cible 3 articles/semaine. Actuellement 2. Ajouter 1 article supplémentaire pour maintenir la trajectoire.' },
-                { icon: '🎯', title: 'Diversifier les Catégories', desc: 'Bath Rugs: Ajouter catégorie "Tendances". Shower Curtains: Ajouter guides "Maintenance".' },
-                { icon: '⚡', title: 'Optimiser la Fréquence de MAJ', desc: 'Publier les lundis & jeudis pour meilleure indexation. Actuellement: dates dispersées.' },
-                { icon: '🔍', title: 'Construire l\'Autorité SEO', desc: 'Ajouter 2-3 articles piliers par blog. Lier au contenu existant pour autorité topique.' }
+                { icon: '📈', title: 'Increase Production Rate', desc: 'Target 3 articles/week. Currently at 2. Add 1 more article to maintain growth trajectory.' },
+                { icon: '🎯', title: 'Diversify Categories', desc: 'Bath Rugs: Add "Trends" category. Shower Curtains: Add "Maintenance" guides for retention.' },
+                { icon: '⚡', title: 'Optimize Update Frequency', desc: 'Publish on Mondays & Thursdays for better indexation. Current: Scattered dates.' },
+                { icon: '🔍', title: 'SEO Authority Building', desc: 'Add 2-3 cornerstone articles per blog. Link to existing content for topical authority.' }
             ];
 
             document.getElementById('recommendationsList').innerHTML = `
