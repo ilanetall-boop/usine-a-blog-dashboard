@@ -25,11 +25,25 @@
             --error: #EF4444;
         }
 
+        body.light-mode {
+            --primary: #2563EB;
+            --primary-dark: #1D4ED8;
+            --bg-dark: #FFFFFF;
+            --bg-darker: #F8FAFC;
+            --text-light: #1E293B;
+            --text-gray: #64748B;
+            --border: #E2E8F0;
+            --success: #16A34A;
+            --warning: #EAB308;
+            --error: #DC2626;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: var(--bg-darker);
             color: var(--text-light);
             min-height: 100vh;
+            transition: background-color 0.3s, color 0.3s;
         }
 
         /* ===== TOP BAR ===== */
@@ -43,6 +57,7 @@
             position: sticky;
             top: 0;
             z-index: 100;
+            transition: background-color 0.3s, border-color 0.3s;
         }
 
         .topbar-left {
@@ -60,6 +75,25 @@
             gap: 20px;
         }
 
+        .theme-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            border-radius: 8px;
+            background: var(--border);
+            cursor: pointer;
+            font-size: 1.3em;
+            transition: all 0.3s;
+            border: none;
+        }
+
+        .theme-toggle:hover {
+            background: var(--primary);
+            color: white;
+        }
+
         .user-profile {
             display: flex;
             align-items: center;
@@ -68,6 +102,7 @@
             border-radius: 8px;
             background: var(--border);
             cursor: pointer;
+            transition: background-color 0.3s;
         }
 
         .avatar {
@@ -156,6 +191,7 @@
             padding: 24px;
             position: relative;
             overflow: hidden;
+            transition: background-color 0.3s, border-color 0.3s;
         }
 
         .kpi-card::before {
@@ -217,6 +253,7 @@
             border-radius: 12px;
             padding: 24px;
             margin-bottom: 30px;
+            transition: background-color 0.3s, border-color 0.3s;
         }
 
         .chart-header {
@@ -249,6 +286,7 @@
             border-radius: 12px;
             overflow: hidden;
             margin-bottom: 30px;
+            transition: background-color 0.3s, border-color 0.3s;
         }
 
         .table-header {
@@ -378,6 +416,7 @@
             display: flex;
             align-items: center;
             gap: 16px;
+            transition: background-color 0.3s, border-color 0.3s;
         }
 
         .deploy-icon {
@@ -442,6 +481,7 @@
             📊 Blog Manager Pro
         </div>
         <div class="topbar-right">
+            <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn" title="Toggle theme">🌙</button>
             <div class="user-profile">
                 <div class="avatar">IT</div>
                 <span>Ilane Tall</span>
@@ -504,6 +544,33 @@
     </div>
 
     <script>
+        // Theme Toggle
+        function toggleTheme() {
+            const body = document.body;
+            const isDarkMode = body.classList.contains('light-mode');
+            
+            if (isDarkMode) {
+                body.classList.remove('light-mode');
+                localStorage.setItem('theme', 'dark');
+                document.getElementById('themeBtn').textContent = '🌙';
+            } else {
+                body.classList.add('light-mode');
+                localStorage.setItem('theme', 'light');
+                document.getElementById('themeBtn').textContent = '🌞';
+            }
+        }
+
+        // Load theme preference on startup
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            if (savedTheme === 'light') {
+                document.body.classList.add('light-mode');
+                document.getElementById('themeBtn').textContent = '🌞';
+            } else {
+                document.getElementById('themeBtn').textContent = '🌙';
+            }
+        }
+
         // Load data
         let dashboardData = {};
 
@@ -739,6 +806,7 @@
         // Initialize
         document.addEventListener('DOMContentLoaded', async function() {
             console.log('Starting dashboard initialization...');
+            initTheme();
             await loadData();
             console.log('Data loaded, rendering components...');
             renderKpiGrid();
