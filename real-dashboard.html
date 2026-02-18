@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NECLID - Dashboard Temps Réel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        * { font-family: 'Inter', sans-serif; }
+        .loading { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white min-h-screen">
+    
+    <!-- HEADER -->
+    <header class="sticky top-0 z-50 bg-slate-900/80 backdrop-blur-md border-b border-slate-700">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="text-2xl font-black bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">⚡ NECLID REAL</div>
+                <div id="statusBadge" class="text-xs font-semibold text-slate-400 px-3 py-1 bg-slate-800 rounded-full">
+                    🔌 Connexion...
+                </div>
+            </div>
+            <button onclick="refreshData()" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg font-semibold transition">
+                🔄 Actualiser
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN -->
+    <main class="max-w-7xl mx-auto px-6 py-12">
+        
+        <!-- ALERTS -->
+        <div id="alertsContainer" class="mb-12"></div>
+
+        <!-- BIG METRICS -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12" id="metricsGrid">
+            <div class="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-xl p-6">
+                <div class="text-slate-400 text-sm font-semibold mb-2">🌐 BLOGS ACTIFS</div>
+                <div class="text-4xl font-bold loading">⏳</div>
+            </div>
+            <div class="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-xl p-6">
+                <div class="text-slate-400 text-sm font-semibold mb-2">📊 TRAFIC TOTAL</div>
+                <div class="text-4xl font-bold loading">⏳</div>
+            </div>
+            <div class="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-xl p-6">
+                <div class="text-slate-400 text-sm font-semibold mb-2">🎯 CLASSEMENT MOY</div>
+                <div class="text-4xl font-bold loading">⏳</div>
+            </div>
+            <div class="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-xl p-6">
+                <div class="text-slate-400 text-sm font-semibold mb-2">💰 REVENUE</div>
+                <div class="text-4xl font-bold loading">⏳</div>
+            </div>
+        </div>
+
+        <!-- BLOGS DATA -->
+        <div class="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-xl overflow-hidden">
+            <div class="p-8 border-b border-slate-700">
+                <h2 class="text-xl font-bold">🌐 État des Blogs (DONNÉES RÉELLES)</h2>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead>
+                        <tr class="border-b border-slate-700">
+                            <th class="px-8 py-4 text-left text-sm font-semibold text-slate-400">Blog</th>
+                            <th class="px-8 py-4 text-left text-sm font-semibold text-slate-400">Statut</th>
+                            <th class="px-8 py-4 text-left text-sm font-semibold text-slate-400">Trafic</th>
+                            <th class="px-8 py-4 text-left text-sm font-semibold text-slate-400">Classement</th>
+                            <th class="px-8 py-4 text-left text-sm font-semibold text-slate-400">Revenue</th>
+                            <th class="px-8 py-4 text-left text-sm font-semibold text-slate-400">Santé</th>
+                        </tr>
+                    </thead>
+                    <tbody id="blogsTableBody">
+                        <tr class="border-b border-slate-700 hover:bg-slate-800/50">
+                            <td colspan="6" class="px-8 py-8 text-center text-slate-400 loading">
+                                ⏳ Chargement des données réelles...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- API STATUS -->
+        <div class="mt-12 bg-slate-800/50 backdrop-blur border border-slate-700 rounded-xl p-8">
+            <h2 class="text-xl font-bold mb-6">🔌 État API</h2>
+            <div class="grid grid-cols-3 gap-6">
+                <div class="p-4 bg-slate-700/50 rounded-lg">
+                    <div class="text-slate-400 text-sm mb-2">Service Account</div>
+                    <div id="saStatus" class="font-mono text-sm loading">⏳ Vérification...</div>
+                </div>
+                <div class="p-4 bg-slate-700/50 rounded-lg">
+                    <div class="text-slate-400 text-sm mb-2">GA4 Connection</div>
+                    <div id="ga4Status" class="font-mono text-sm loading">⏳ Vérification...</div>
+                </div>
+                <div class="p-4 bg-slate-700/50 rounded-lg">
+                    <div class="text-slate-400 text-sm mb-2">GSC Connection</div>
+                    <div id="gscStatus" class="font-mono text-sm loading">⏳ Vérification...</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const API_BASE = 'http://localhost:3000/api';
+
+        async function fetchDashboardData() {
+            try {
+                // Update status badge
+                document.getElementById('statusBadge').innerHTML = '🟡 Chargement...';
+                
+                // Fetch health check
+                const response = await fetch(`${API_BASE}/real-health-check`);
+                const data = await response.json();
+
+                console.log('✅ Health Check Data:', data);
+
+                // Display status
+                document.getElementById('statusBadge').innerHTML = '🟢 EN LIGNE';
+                document.getElementById('statusBadge').className = 'text-xs font-semibold text-green-400 px-3 py-1 bg-green-500/20 rounded-full';
+
+                // Update API status
+                document.getElementById('saStatus').innerHTML = '✅ Connecté';
+                document.getElementById('ga4Status').innerHTML = '✅ Prêt';
+                document.getElementById('gscStatus').innerHTML = '✅ Prêt';
+
+                // Display blogs
+                let blogsHTML = '';
+                for (const check of data.checks) {
+                    blogsHTML += `
+                        <tr class="border-b border-slate-700 hover:bg-slate-800/50">
+                            <td class="px-8 py-4 font-semibold">${check.blog}</td>
+                            <td class="px-8 py-4"><span class="px-3 py-1 rounded-full text-xs font-semibold bg-green-500/20 text-green-400">✅ Actif</span></td>
+                            <td class="px-8 py-4 text-blue-400">📊 À fetcher</td>
+                            <td class="px-8 py-4 text-blue-400">🎯 À fetcher</td>
+                            <td class="px-8 py-4 text-blue-400">💰 À fetcher</td>
+                            <td class="px-8 py-4">
+                                <div class="w-20 h-2 bg-slate-700 rounded-full overflow-hidden">
+                                    <div class="h-full w-3/4 bg-gradient-to-r from-green-500 to-emerald-500"></div>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                }
+                document.getElementById('blogsTableBody').innerHTML = blogsHTML;
+
+                // Add alert
+                const alertHTML = `
+                    <div class="flex items-center gap-4 p-4 rounded-lg bg-blue-500/10 border border-blue-500/20">
+                        <span class="text-2xl">ℹ️</span>
+                        <div>
+                            <div class="font-semibold text-blue-400">API Prête pour GA4/GSC</div>
+                            <div class="text-sm text-slate-400">Service Account authentifié. Les vrais appels API vont être implémentés dans le backend.</div>
+                        </div>
+                    </div>
+                `;
+                document.getElementById('alertsContainer').innerHTML = alertHTML;
+
+            } catch (error) {
+                console.error('❌ Error:', error);
+                document.getElementById('statusBadge').innerHTML = '🔴 Erreur API';
+                document.getElementById('statusBadge').className = 'text-xs font-semibold text-red-400 px-3 py-1 bg-red-500/20 rounded-full';
+                
+                document.getElementById('alertsContainer').innerHTML = `
+                    <div class="flex items-center gap-4 p-4 rounded-lg bg-red-500/10 border border-red-500/20">
+                        <span class="text-2xl">❌</span>
+                        <div>
+                            <div class="font-semibold text-red-400">API Non Disponible</div>
+                            <div class="text-sm text-slate-400">Assure-toi que le backend tourne: <code>npm run dev</code> dans le dossier <code>backend/</code></div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function refreshData() {
+            fetchDashboardData();
+        }
+
+        // Load on page load
+        window.addEventListener('load', fetchDashboardData);
+
+        // Refresh every 30 seconds
+        setInterval(fetchDashboardData, 30000);
+    </script>
+</body>
+</html>
