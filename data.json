@@ -1,0 +1,39 @@
+{
+  "blogs": [
+    {
+      "slug": "best-bath-rugs",
+      "name": "Best Bath Rugs",
+      "domain": "bestbathrugs.com",
+      "status": "active",
+      "colors": {
+        "primary": "#5D4037",
+        "accent": "#FF7043"
+      },
+      "articles": 13,
+      "lastArticleDate": "2026-02-17"
+    },
+    {
+      "slug": "best-shower-curtains",
+      "name": "Best Shower Curtains",
+      "domain": "best-shower-curtains.com",
+      "status": "active",
+      "colors": {
+        "primary": "#00695C",
+        "accent": "#FF6F00"
+      },
+      "articles": 10,
+      "lastArticleDate": "2026-02-17"
+    }
+  ],
+  "stats": {
+    "totalArticles": 23,
+    "totalBlogs": 2,
+    "activeBlogs": 2,
+    "lastUpdated": "2026-02-18T04:05:00Z"
+  },
+  "health": {
+    "status": "healthy",
+    "brokenLinks": 0,
+    "warnings": 0
+  }
+}

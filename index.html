@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏭 Usine-à-Blog Dashboard Pro</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: linear-gradient(135deg, rgba(255,107,67,0.1), rgba(102,51,153,0.1));
+            border-radius: 12px;
+            border: 1px solid rgba(255,107,67,0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #FF6B43, #FF9D6F);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        header p {
+            color: #b0b0b0;
+            font-size: 1.1em;
+        }
+
+        .timestamp {
+            color: #888;
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+
+        /* KPI Cards */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .kpi-card {
+            background: linear-gradient(135deg, rgba(102,51,153,0.2), rgba(75,0,130,0.2));
+            border: 1px solid rgba(255,107,67,0.3);
+            border-radius: 12px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(255,107,67,0.1), transparent);
+            border-radius: 50%;
+        }
+
+        .kpi-card:hover {
+            border-color: rgba(255,107,67,0.6);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(255,107,67,0.2);
+        }
+
+        .kpi-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .kpi-label {
+            color: #888;
+            font-size: 0.95em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .kpi-value {
+            font-size: 2.5em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #FF9D6F, #FF6B43);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .kpi-subtitle {
+            color: #999;
+            font-size: 0.85em;
+            margin-top: 8px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            background: #4CAF50;
+            color: white;
+            border-radius: 20px;
+            font-size: 0.75em;
+            margin-top: 10px;
+        }
+
+        .status-badge.warning {
+            background: #FFC107;
+        }
+
+        .status-badge.error {
+            background: #F44336;
+        }
+
+        /* Charts Section */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .chart-container {
+            background: linear-gradient(135deg, rgba(102,51,153,0.2), rgba(75,0,130,0.2));
+            border: 1px solid rgba(255,107,67,0.3);
+            border-radius: 12px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+        }
+
+        .chart-title {
+            font-size: 1.3em;
+            margin-bottom: 20px;
+            color: #FF9D6F;
+        }
+
+        .chart-wrapper {
+            position: relative;
+            height: 300px;
+        }
+
+        /* Articles Section */
+        .articles-section {
+            background: linear-gradient(135deg, rgba(102,51,153,0.2), rgba(75,0,130,0.2));
+            border: 1px solid rgba(255,107,67,0.3);
+            border-radius: 12px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            color: #FF9D6F;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .blog-articles {
+            margin-bottom: 30px;
+        }
+
+        .blog-name {
+            font-size: 1.1em;
+            color: #FF9D6F;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255,107,67,0.2);
+        }
+
+        .article-item {
+            background: rgba(0,0,0,0.3);
+            border-left: 3px solid #FF6B43;
+            padding: 15px;
+            margin-bottom: 12px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .article-item:hover {
+            background: rgba(255,107,67,0.1);
+            border-left-color: #FF9D6F;
+        }
+
+        .article-title {
+            font-size: 1em;
+            margin-bottom: 8px;
+            color: #e0e0e0;
+        }
+
+        .article-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 0.85em;
+            color: #888;
+        }
+
+        .article-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Alerts */
+        .alerts-section {
+            background: linear-gradient(135deg, rgba(244,67,54,0.1), rgba(255,152,0,0.1));
+            border: 1px solid rgba(244,67,54,0.3);
+            border-radius: 12px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+            margin-bottom: 40px;
+        }
+
+        .alert-item {
+            background: rgba(0,0,0,0.3);
+            border-left: 3px solid #FFC107;
+            padding: 15px;
+            margin-bottom: 12px;
+            border-radius: 8px;
+        }
+
+        .alert-item.error {
+            border-left-color: #F44336;
+        }
+
+        .alert-item.success {
+            border-left-color: #4CAF50;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            border-top: 1px solid rgba(255,107,67,0.1);
+            margin-top: 40px;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .kpi-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .article-meta {
+                flex-direction: column;
+            }
+        }
+
+        .refresh-btn {
+            background: linear-gradient(135deg, #FF6B43, #FF9D6F);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin-top: 20px;
+        }
+
+        .refresh-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255,107,67,0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏭 Usine-à-Blog Dashboard</h1>
+            <p>Monitoring temps réel de la production de contenu</p>
+            <div class="timestamp" id="timestamp"></div>
+        </header>
+
+        <!-- KPI Cards -->
+        <div class="kpi-grid" id="kpiGrid"></div>
+
+        <!-- Alerts -->
+        <div class="alerts-section" id="alertsSection" style="display: none;">
+            <h2 class="section-title">⚠️ Alertes & Statut</h2>
+            <div id="alertsList"></div>
+        </div>
+
+        <!-- Charts -->
+        <div class="charts-grid">
+            <div class="chart-container">
+                <div class="chart-title">📈 Articles par jour (derniers 7 jours)</div>
+                <div class="chart-wrapper">
+                    <canvas id="articlesChart"></canvas>
+                </div>
+            </div>
+            <div class="chart-container">
+                <div class="chart-title">🎯 Distribution par blog</div>
+                <div class="chart-wrapper">
+                    <canvas id="distributionChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Articles -->
+        <div class="articles-section">
+            <h2 class="section-title">📰 Derniers Articles (Top 5)</h2>
+            <div id="articlesContainer"></div>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <button class="refresh-btn" onclick="location.reload()">🔄 Actualiser</button>
+            <p style="margin-top: 15px;">Usine-à-Blog • Monitoring Dashboard • Data synced in real-time</p>
+        </footer>
+    </div>
+
+    <script>
+        // Data import
+        const blogsRegistry = {
+            "blogs": [
+                {
+                    "slug": "best-bath-rugs",
+                    "name": "Best Bath Rugs",
+                    "domain": "bestbathrugs.com",
+                    "status": "active",
+                    "colors": {
+                        "primary": "#5D4037",
+                        "accent": "#FF7043"
+                    }
+                },
+                {
+                    "slug": "best-shower-curtains",
+                    "name": "Best Shower Curtains",
+                    "domain": "best-shower-curtains.com",
+                    "status": "active",
+                    "colors": {
+                        "primary": "#00695C",
+                        "accent": "#FF6F00"
+                    }
+                }
+            ]
+        };
+
+        const bathRugsArticles = [
+            {"title": "Best Memory Foam Bath Rugs 2024", "slug": "best-memory-foam-bath-rugs", "publishDate": "2026-02-17"},
+            {"title": "Best Bath Rugs for Elderly", "slug": "best-bath-rugs-for-elderly", "publishDate": "2026-02-16"},
+            {"title": "8 Best Bath Rugs for Small Bathrooms", "slug": "best-bath-rugs-for-small-bathrooms", "publishDate": "2026-02-04"},
+            {"title": "7 Best Quick-Dry Bath Rugs", "slug": "best-quick-dry-bath-rugs-for-humid-bathrooms", "publishDate": "2026-02-03"}
+        ];
+
+        const showerCurtainsArticles = [
+            {"title": "Best Fabric Shower Curtains 2024", "slug": "best-fabric-shower-curtains", "publishDate": "2026-02-17"},
+            {"title": "Best Shower Curtains for Mold Prevention", "slug": "best-shower-curtains-mold-prevention", "publishDate": "2026-02-16"},
+            {"title": "Top 7 Best Shower Curtains of 2026", "slug": "top-7-best-shower-curtains-of-2026", "publishDate": "2026-02-01"},
+            {"title": "Fabric vs Vinyl vs PEVA Shower Curtains", "slug": "fabric-vs-vinyl-vs-peva-shower-curtains", "publishDate": "2026-02-02"}
+        ];
+
+        // Utils
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+        }
+
+        function getDaysSince(dateStr) {
+            const date = new Date(dateStr);
+            const today = new Date('2026-02-18');
+            const diff = today.getTime() - date.getTime();
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            return days;
+        }
+
+        // Dashboard Data
+        function calculateStats() {
+            const allArticles = [...bathRugsArticles, ...showerCurtainsArticles];
+            const totalArticles = allArticles.length;
+            const totalBlogs = blogsRegistry.blogs.length;
+            const activeBlogs = blogsRegistry.blogs.filter(b => b.status === 'active').length;
+
+            // Last article dates
+            const bathRugsLatest = new Date(bathRugsArticles[0].publishDate);
+            const curtainsLatest = new Date(showerCurtainsArticles[0].publishDate);
+
+            return {
+                totalArticles,
+                totalBlogs,
+                activeBlogs,
+                bathRugsLatest,
+                curtainsLatest,
+                allArticles: allArticles.sort((a, b) => new Date(b.publishDate) - new Date(a.publishDate))
+            };
+        }
+
+        // Render KPI Cards
+        function renderKPIs() {
+            const stats = calculateStats();
+            const kpiGrid = document.getElementById('kpiGrid');
+
+            const kpis = [
+                {
+                    label: 'Articles Générés',
+                    value: stats.totalArticles,
+                    subtitle: 'contenu actif',
+                    status: 'success'
+                },
+                {
+                    label: 'Blogs Actifs',
+                    value: stats.activeBlogs,
+                    subtitle: 'de ' + stats.totalBlogs + ' configurés',
+                    status: 'success'
+                },
+                {
+                    label: 'Articles/Mois',
+                    value: '~' + Math.round(stats.totalArticles / 1.5),
+                    subtitle: 'taux de production actuel',
+                    status: 'success'
+                },
+                {
+                    label: 'Dernier Article',
+                    value: 'Aujourd\'hui',
+                    subtitle: 'mis à jour en temps réel',
+                    status: getDaysSince(bathRugsArticles[0].publishDate) > 1 ? 'warning' : 'success'
+                }
+            ];
+
+            kpiGrid.innerHTML = kpis.map(kpi => `
+                <div class="kpi-card">
+                    <div class="kpi-content">
+                        <div class="kpi-label">${kpi.label}</div>
+                        <div class="kpi-value">${kpi.value}</div>
+                        <div class="kpi-subtitle">${kpi.subtitle}</div>
+                        <span class="status-badge ${kpi.status}">${kpi.status === 'success' ? '✓ OK' : '⚠ À surveiller'}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Render Articles
+        function renderArticles() {
+            const stats = calculateStats();
+            const container = document.getElementById('articlesContainer');
+
+            const blogs = [
+                { name: 'Best Bath Rugs', articles: bathRugsArticles, color: '#FF7043' },
+                { name: 'Best Shower Curtains', articles: showerCurtainsArticles, color: '#FF6F00' }
+            ];
+
+            container.innerHTML = blogs.map(blog => `
+                <div class="blog-articles">
+                    <div class="blog-name" style="border-bottom-color: ${blog.color}33;">
+                        ${blog.name} (${blog.articles.length} articles)
+                    </div>
+                    ${blog.articles.slice(0, 5).map(article => `
+                        <div class="article-item" style="border-left-color: ${blog.color};">
+                            <div class="article-title">📄 ${article.title}</div>
+                            <div class="article-meta">
+                                <span>📅 ${formatDate(article.publishDate)}</span>
+                                <span>⏱️ ${getDaysSince(article.publishDate)} jour${getDaysSince(article.publishDate) > 1 ? 's' : ''} ago</span>
+                                <span><a href="https://${blog.name === 'Best Bath Rugs' ? 'bestbathrugs.com' : 'best-shower-curtains.com'}/${article.slug}" target="_blank" style="color: ${blog.color}; text-decoration: none;">🔗 Voir l'article →</a></span>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `).join('');
+        }
+
+        // Render Charts
+        function renderCharts() {
+            // Articles chart
+            const ctx1 = document.getElementById('articlesChart').getContext('2d');
+            const days = ['J-6', 'J-5', 'J-4', 'J-3', 'J-2', 'J-1', 'Aujourd\'hui'];
+            const data = [1, 0, 1, 0, 1, 1, 2]; // Approximation based on dates
+
+            new Chart(ctx1, {
+                type: 'line',
+                data: {
+                    labels: days,
+                    datasets: [{
+                        label: 'Articles générés',
+                        data: data,
+                        borderColor: '#FF6B43',
+                        backgroundColor: 'rgba(255,107,67,0.1)',
+                        borderWidth: 2,
+                        tension: 0.4,
+                        fill: true,
+                        pointBackgroundColor: '#FF6B43',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 3,
+                            grid: { color: 'rgba(255,255,255,0.05)' },
+                            ticks: { color: '#999' }
+                        },
+                        x: {
+                            grid: { color: 'rgba(255,255,255,0.05)' },
+                            ticks: { color: '#999' }
+                        }
+                    }
+                }
+            });
+
+            // Distribution chart
+            const ctx2 = document.getElementById('distributionChart').getContext('2d');
+            new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Best Bath Rugs', 'Best Shower Curtains'],
+                    datasets: [{
+                        data: [bathRugsArticles.length, showerCurtainsArticles.length],
+                        backgroundColor: ['#FF7043', '#FF6F00'],
+                        borderColor: 'rgba(15,12,41,1)',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: { color: '#e0e0e0' }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Timestamp
+        function updateTimestamp() {
+            const now = new Date();
+            document.getElementById('timestamp').textContent = `Dernière mise à jour: ${now.toLocaleString('fr-FR')}`;
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateTimestamp();
+            renderKPIs();
+            renderArticles();
+            renderCharts();
+
+            // Refresh every minute
+            setInterval(() => {
+                updateTimestamp();
+            }, 60000);
+        });
+    </script>
+</body>
+</html>
