@@ -1,0 +1,72 @@
+{
+  "blogs": [
+    {
+      "slug": "best-bath-rugs",
+      "name": "Best Bath Rugs",
+      "domain": "bestbathrugs.com",
+      "github_repo": "ilanetall-boop/bestbathrugs",
+      "local_path": "bestbathrugs-dynamic/bestbathrugs_site",
+      "status": "active",
+      "category": "home-interior",
+      "niche": "bath rugs",
+      "affiliate_tag": "bathrugsguide-20",
+      "ga_id": "G-ZQGHN8Y56N",
+      "ga_property_id": "491845681",
+      "gsc_property": "sc-domain:bestbathrugs.com",
+      "google_sheet_id": "1vQMCWKZSIvg2h-iSlosQQZnYFJDyD5Q13trOb9Apcf4",
+      "cloudflare_zone_id": null,
+      "colors": {
+        "primary": "#5D4037",
+        "primary_light": "#8D6E63",
+        "primary_dark": "#3E2723",
+        "accent": "#FF7043"
+      },
+      "created": "2025-02-01",
+      "last_article_date": "2026-02-03",
+      "total_articles": 10,
+      "articles_per_day": 1
+    },
+    {
+      "slug": "best-shower-curtains",
+      "name": "Best Shower Curtains",
+      "domain": "best-shower-curtains.com",
+      "github_repo": "ilanetall-boop/bestshowercurtains",
+      "local_path": "best-shower-curtains",
+      "status": "active",
+      "category": "home-interior",
+      "niche": "shower curtains",
+      "affiliate_tag": "bestshowercurtains-20",
+      "ga_id": "G-PC9GTP4DCP",
+      "ga_property_id": "522894801",
+      "gsc_property": "sc-domain:best-shower-curtains.com",
+      "google_sheet_id": "1u7nntu1ldYnuqdgym6UqMrCWSVjMrN0hUS0yAeMPP2U",
+      "cloudflare_zone_id": null,
+      "colors": {
+        "primary": "#00695C",
+        "primary_light": "#26A69A",
+        "primary_dark": "#004D40",
+        "accent": "#FF6F00"
+      },
+      "created": "2026-01-30",
+      "last_article_date": "2026-02-03",
+      "total_articles": 7,
+      "articles_per_day": 1
+    }
+  ],
+  "categories": {
+    "home-interior": [
+      "best-bath-rugs",
+      "best-shower-curtains"
+    ],
+    "kitchen": [],
+    "garden-outdoor": [],
+    "tech-gadgets": [],
+    "fitness-sports": []
+  },
+  "stats": {
+    "total_blogs": 2,
+    "active_blogs": 2,
+    "total_articles": 17,
+    "last_updated": "2026-02-03"
+  }
+}

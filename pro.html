@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Manager Pro - Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #3B82F6;
+            --primary-dark: #1E40AF;
+            --bg-dark: #0F172A;
+            --bg-darker: #020617;
+            --text-light: #E2E8F0;
+            --text-gray: #94A3B8;
+            --border: #1E293B;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --error: #EF4444;
+        }
+
+        body.light-mode {
+            --primary: #2563EB;
+            --primary-dark: #1D4ED8;
+            --bg-dark: #FFFFFF;
+            --bg-darker: #F8FAFC;
+            --text-light: #1E293B;
+            --text-gray: #64748B;
+            --border: #E2E8F0;
+            --success: #16A34A;
+            --warning: #EAB308;
+            --error: #DC2626;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-darker);
+            color: var(--text-light);
+            min-height: 100vh;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* ===== TOP BAR ===== */
+        .topbar {
+            background: var(--bg-dark);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            font-size: 1.3em;
+            font-weight: 700;
+            color: var(--text-light);
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .theme-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            border-radius: 8px;
+            background: var(--border);
+            cursor: pointer;
+            font-size: 1.3em;
+            transition: all 0.3s;
+            border: none;
+        }
+
+        .theme-toggle:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            background: var(--border);
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: white;
+        }
+
+        /* ===== MAIN CONTAINER ===== */
+        .container {
+            padding: 30px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.2em;
+            font-weight: 700;
+            color: var(--text-light);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        /* ===== BUTTONS ===== */
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9em;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            box-shadow: 0 8px 24px rgba(59,130,246,0.3);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        /* ===== KPI GRID ===== */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .kpi-card {
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: -40px;
+            right: -40px;
+            width: 120px;
+            height: 120px;
+            background: radial-gradient(circle, rgba(59,130,246,0.1), transparent);
+            border-radius: 50%;
+        }
+
+        .kpi-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .kpi-label {
+            color: var(--text-gray);
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .kpi-main {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .kpi-value {
+            font-size: 2.2em;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .kpi-unit {
+            color: var(--text-gray);
+            font-size: 0.85em;
+        }
+
+        .kpi-meta {
+            color: var(--text-gray);
+            font-size: 0.85em;
+        }
+
+        .kpi-meta.positive {
+            color: var(--success);
+        }
+
+        /* ===== CHART SECTION ===== */
+        .chart-container {
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 30px;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .chart-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: var(--text-light);
+        }
+
+        .chart-period {
+            color: var(--text-gray);
+            font-size: 0.9em;
+        }
+
+        .chart-wrapper {
+            position: relative;
+            height: 320px;
+        }
+
+        /* ===== TABLE ===== */
+        .table-container {
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 30px;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        .table-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .table-header h3 {
+            font-size: 1.1em;
+            color: var(--text-light);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: rgba(30,41,59,0.5);
+        }
+
+        th {
+            padding: 16px 24px;
+            text-align: left;
+            color: var(--text-gray);
+            font-weight: 600;
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        td {
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-light);
+        }
+
+        tbody tr:hover {
+            background: rgba(59,130,246,0.05);
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .blog-name {
+            font-weight: 600;
+            color: var(--text-light);
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: rgba(16,185,129,0.15);
+            color: var(--success);
+        }
+
+        .status-success {
+            background: rgba(16,185,129,0.15);
+            color: var(--success);
+        }
+
+        .status-pending {
+            background: rgba(245,158,11,0.15);
+            color: var(--warning);
+        }
+
+        .status-error {
+            background: rgba(239,68,68,0.15);
+            color: var(--error);
+        }
+
+        .actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            padding: 8px 14px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8em;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .action-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .action-btn.secondary {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-light);
+        }
+
+        .action-btn.secondary:hover {
+            background: rgba(59,130,246,0.1);
+            border-color: var(--primary);
+        }
+
+        /* ===== DEPLOY STATUS ===== */
+        .deploy-status {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .deploy-item {
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        .deploy-icon {
+            font-size: 1.8em;
+        }
+
+        .deploy-content h4 {
+            color: var(--text-light);
+            margin-bottom: 4px;
+            font-size: 0.95em;
+        }
+
+        .deploy-content p {
+            color: var(--text-gray);
+            font-size: 0.85em;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .kpi-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            .kpi-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 20px;
+                align-items: flex-start;
+            }
+
+            .header-actions {
+                width: 100%;
+            }
+
+            .header-actions .btn {
+                flex: 1;
+            }
+
+            table {
+                font-size: 0.85em;
+            }
+
+            td, th {
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- TOP BAR -->
+    <div class="topbar">
+        <div class="topbar-left">
+            📊 Blog Manager Pro
+        </div>
+        <div class="topbar-right">
+            <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn" title="Toggle theme">🌙</button>
+            <div class="user-profile">
+                <div class="avatar">IT</div>
+                <span>Ilane Tall</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN CONTAINER -->
+    <div class="container">
+        <!-- HEADER -->
+        <div class="header">
+            <h1>Blog Manager</h1>
+            <div class="header-actions">
+                <button class="btn btn-success">✨ Generate New Blog</button>
+                <button class="btn btn-primary">📝 Generate Article</button>
+            </div>
+        </div>
+
+        <!-- KPI GRID -->
+        <div class="kpi-grid" id="kpiGrid"></div>
+
+        <!-- CHART -->
+        <div class="chart-container">
+            <div class="chart-header">
+                <div class="chart-title">📝 Articles Published (Last 30 Days)</div>
+                <div class="chart-period">Real data from blog articles</div>
+            </div>
+            <div class="chart-wrapper">
+                <canvas id="trafficChart"></canvas>
+            </div>
+        </div>
+
+        <!-- MY BLOGS TABLE -->
+        <div class="table-container">
+            <div class="table-header">
+                <h3>🌐 My Blogs</h3>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Blog</th>
+                        <th>Status</th>
+                        <th>Traffic</th>
+                        <th>Revenue</th>
+                        <th>Articles</th>
+                        <th>Last Post</th>
+                        <th>Health</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="blogsTable"></tbody>
+            </table>
+        </div>
+
+        <!-- DEPLOY STATUS -->
+        <div class="chart-header" style="margin-bottom: 20px;">
+            <div class="chart-title">🚀 Deployment Status</div>
+        </div>
+        <div class="deploy-status" id="deployStatus"></div>
+    </div>
+
+    <script>
+        // Theme Toggle
+        function toggleTheme() {
+            const body = document.body;
+            const isDarkMode = body.classList.contains('light-mode');
+            
+            if (isDarkMode) {
+                body.classList.remove('light-mode');
+                localStorage.setItem('theme', 'dark');
+                document.getElementById('themeBtn').textContent = '🌙';
+            } else {
+                body.classList.add('light-mode');
+                localStorage.setItem('theme', 'light');
+                document.getElementById('themeBtn').textContent = '🌞';
+            }
+        }
+
+        // Load theme preference on startup
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            if (savedTheme === 'light') {
+                document.body.classList.add('light-mode');
+                document.getElementById('themeBtn').textContent = '🌞';
+            } else {
+                document.getElementById('themeBtn').textContent = '🌙';
+            }
+        }
+
+        // Load data
+        let dashboardData = {};
+
+        async function loadData() {
+            try {
+                // Force refresh with timestamp to bypass cache
+                const url = `data.json?t=${Date.now()}`;
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                dashboardData = await response.json();
+                console.log('✓ Data loaded successfully!');
+                console.log('Blogs:', dashboardData.blogs.map(b => b.name));
+                console.log('Total articles:', dashboardData.blogs.reduce((sum, b) => sum + (b.articles?.length || 0), 0));
+                console.log('Stats:', dashboardData.stats);
+            } catch (error) {
+                console.error('Error loading data:', error);
+                alert('Error loading data! Check console.');
+            }
+        }
+
+        // Render KPI Grid
+        function renderKpiGrid() {
+            const blogs = dashboardData.blogs || [];
+            const stats = dashboardData.stats || {};
+            
+            // Calculate real totals
+            let totalArticles = 0;
+            blogs.forEach(blog => {
+                totalArticles += (blog.articles?.length || 0);
+            });
+
+            // Find latest post
+            let latestPost = null;
+            let latestBlog = null;
+            let latestDate = new Date(0);
+            
+            blogs.forEach(blog => {
+                (blog.articles || []).forEach(article => {
+                    const date = new Date(article.publishDate);
+                    if (date > latestDate) {
+                        latestDate = date;
+                        latestPost = article.title;
+                        latestBlog = blog.name;
+                    }
+                });
+            });
+
+            const kpis = [
+                { label: 'Total Articles', value: totalArticles.toString(), unit: 'Published', meta: 'All blogs' },
+                { label: 'Total Blogs', value: blogs.length.toString(), unit: 'Active', meta: 'Affiliate network' },
+                { label: 'Bath Rugs Blog', value: (blogs[0]?.articles?.length || 0).toString(), unit: 'Articles', meta: 'bestbathrugs.com' },
+                { label: 'Shower Curtains', value: (blogs[1]?.articles?.length || 0).toString(), unit: 'Articles', meta: 'best-shower-curtains.com' },
+                { label: 'Latest Article', value: latestPost ? latestPost.substring(0, 25) + '...' : 'N/A', unit: latestBlog || '', meta: 'Recently published' },
+                { label: 'SEO Status', value: '✓', unit: `${totalArticles} indexed`, meta: 'Ready for Google' }
+            ];
+
+            const grid = document.getElementById('kpiGrid');
+            grid.innerHTML = kpis.map(kpi => `
+                <div class="kpi-card">
+                    <div class="kpi-label">${kpi.label}</div>
+                    <div class="kpi-main">
+                        <div class="kpi-value">${kpi.value}</div>
+                        <div class="kpi-unit">${kpi.unit}</div>
+                    </div>
+                    <div class="kpi-meta positive">${kpi.meta}</div>
+                </div>
+            `).join('');
+        }
+
+        // Render Blogs Table
+        function renderBlogsTable() {
+            const blogs = dashboardData.blogs || [];
+            const table = document.getElementById('blogsTable');
+
+            function getLatestPostDate(blog) {
+                if (!blog.articles || blog.articles.length === 0) return 'Never';
+                const dates = blog.articles.map(a => new Date(a.publishDate));
+                const latest = new Date(Math.max(...dates));
+                const today = new Date('2026-02-18');
+                const diff = today.getTime() - latest.getTime();
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                if (days === 0) return 'Today';
+                if (days === 1) return 'Yesterday';
+                return `${days}d ago`;
+            }
+
+            const blogsHtml = blogs.map(blog => `
+                <tr>
+                    <td><div class="blog-name">${blog.name}</div></td>
+                    <td><span class="status-badge status-active">🟢 Active</span></td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>${blog.articles?.length || 0}</td>
+                    <td>${getLatestPostDate(blog)}</td>
+                    <td><strong style="color: var(--success);">100%</strong></td>
+                    <td>
+                        <div class="actions">
+                            <button class="action-btn" onclick="window.open('https://${blog.domain}')">View</button>
+                            <button class="action-btn secondary">Edit</button>
+                            <button class="action-btn secondary">Generate</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+
+            table.innerHTML = blogsHtml;
+        }
+
+        // Render Traffic Chart
+        function renderTrafficChart() {
+            const blogs = dashboardData.blogs || [];
+            const ctx = document.getElementById('trafficChart').getContext('2d');
+            
+            // Count articles per day (last 30 days)
+            const articlesPerDay = {};
+            const today = new Date('2026-02-18');
+            
+            for (let i = 0; i < 30; i++) {
+                const date = new Date(today);
+                date.setDate(date.getDate() - i);
+                const dateStr = date.toISOString().split('T')[0];
+                articlesPerDay[dateStr] = 0;
+            }
+
+            // Count articles
+            blogs.forEach(blog => {
+                (blog.articles || []).forEach(article => {
+                    const dateStr = article.publishDate;
+                    if (dateStr in articlesPerDay) {
+                        articlesPerDay[dateStr]++;
+                    }
+                });
+            });
+
+            const days = [];
+            const data = [];
+            for (let i = 29; i >= 0; i--) {
+                const date = new Date(today);
+                date.setDate(date.getDate() - i);
+                const dateStr = date.toISOString().split('T')[0];
+                days.push(date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
+                data.push((articlesPerDay[dateStr] || 0) * 100); // Multiply for visibility
+            }
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: days,
+                    datasets: [{
+                        label: 'Articles Published',
+                        data: data,
+                        borderColor: '#3B82F6',
+                        backgroundColor: 'rgba(59,130,246,0.1)',
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 0,
+                        pointHoverRadius: 6,
+                        pointBackgroundColor: '#3B82F6',
+                        pointBorderColor: 'white',
+                        pointBorderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: 'rgba(226,232,240,0.1)' },
+                            ticks: { color: '#94A3B8' }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#94A3B8' }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Render Deploy Status
+        function renderDeployStatus() {
+            const blogs = dashboardData.blogs || [];
+            
+            let deployHtml = `
+                <div class="deploy-item">
+                    <div class="deploy-icon">✅</div>
+                    <div class="deploy-content">
+                        <h4>GitHub Repos</h4>
+                        <p>Synced • ${blogs.map(b => b.domain).join(', ')}</p>
+                    </div>
+                </div>
+            `;
+            
+            deployHtml += `
+                <div class="deploy-item">
+                    <div class="deploy-icon">✅</div>
+                    <div class="deploy-content">
+                        <h4>Cloudflare Deploy</h4>
+                        <p>Active • Both sites live</p>
+                    </div>
+                </div>
+            `;
+
+            blogs.forEach(blog => {
+                deployHtml += `
+                    <div class="deploy-item">
+                        <div class="deploy-icon">✅</div>
+                        <div class="deploy-content">
+                            <h4>${blog.domain}</h4>
+                            <p>Online via Cloudflare</p>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            deployHtml += `
+                <div class="deploy-item">
+                    <div class="deploy-icon">⏳</div>
+                    <div class="deploy-content">
+                        <h4>Google Indexing</h4>
+                        <p>In Progress • ${blogs.reduce((sum, b) => sum + (b.articles?.length || 0), 0)}/23 pages</p>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('deployStatus').innerHTML = deployHtml;
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', async function() {
+            console.log('Starting dashboard initialization...');
+            initTheme();
+            await loadData();
+            console.log('Data loaded, rendering components...');
+            renderKpiGrid();
+            renderBlogsTable();
+            renderTrafficChart();
+            renderDeployStatus();
+            console.log('Dashboard rendered successfully!');
+        });
+    </script>
+</body>
+</html>

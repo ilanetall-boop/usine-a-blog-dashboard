@@ -1,0 +1,8 @@
+node_modules/
+.claude/
+_archive/
+_ul
+.DS_Store
+*.log
+.env
+google-credentials.json

@@ -1,0 +1,172 @@
+{
+  "blogs": [
+    {
+      "slug": "best-bath-rugs",
+      "name": "Best Bath Rugs",
+      "domain": "bestbathrugs.com",
+      "status": "active",
+      "colors": {
+        "primary": "#5D4037",
+        "accent": "#FF7043"
+      },
+      "articles": [
+        {
+          "title": "Best Memory Foam Bath Rugs 2024: Ultimate Guide to Comfort & Durability",
+          "slug": "best-memory-foam-bath-rugs",
+          "publishDate": "2026-02-17",
+          "category": "Reviews"
+        },
+        {
+          "title": "Best Bath Rugs for Elderly: Safety & Comfort Guide 2024",
+          "slug": "best-bath-rugs-for-elderly",
+          "publishDate": "2026-02-16",
+          "category": "Reviews"
+        },
+        {
+          "title": "8 Best Bath Rugs for Small Bathrooms: Space-Saving Picks",
+          "slug": "best-bath-rugs-for-small-bathrooms",
+          "publishDate": "2026-02-04",
+          "category": "Reviews"
+        },
+        {
+          "title": "7 Best Quick-Dry Bath Rugs for Humid Bathrooms",
+          "slug": "best-quick-dry-bath-rugs-for-humid-bathrooms",
+          "publishDate": "2026-02-03",
+          "category": "Reviews"
+        },
+        {
+          "title": "Bath Rug vs Bath Mat: What's the Real Difference?",
+          "slug": "bath-rug-vs-bath-mat",
+          "publishDate": "2026-02-01",
+          "category": "Guides"
+        },
+        {
+          "title": "10 Best Luxury Bath Rugs That Feel Like a Spa",
+          "slug": "10-best-luxury-bath-rugs-that-feel-like-a-spa",
+          "publishDate": "2026-01-29",
+          "category": "Reviews"
+        },
+        {
+          "title": "Best Non-Slip Bath Rugs for Elderly and Kids Safety",
+          "slug": "best-non-slip-bath-rugs-for-elderly-and-kids-safety",
+          "publishDate": "2026-01-28",
+          "category": "Reviews"
+        },
+        {
+          "title": "How to Choose the Perfect Bath Rug Size for Any Bathroom",
+          "slug": "bath-rug-size-guide",
+          "publishDate": "2026-01-20",
+          "category": "Guides"
+        },
+        {
+          "title": "Memory Foam vs Chenille Bath Rugs: Which Is Better?",
+          "slug": "memory-foam-vs-chenille-bath-rugs",
+          "publishDate": "2026-01-15",
+          "category": "Comparisons"
+        },
+        {
+          "title": "Top 5 Ultra-Absorbent Bath Rugs That Will Transform Your Bathroom in 2025",
+          "slug": "top-5-ultra-absorbent-bath-rugs-2025",
+          "publishDate": "2025-02-15",
+          "category": "Reviews"
+        },
+        {
+          "title": "Top 6 Bath Rugs of 2025: Complete Comparison Guide",
+          "slug": "top-6-bath-rugs-of-2025",
+          "publishDate": "2025-02-10",
+          "category": "Comparisons"
+        },
+        {
+          "title": "Best Materials for Your Bath Rug: Microfiber vs Memory Foam vs Cotton",
+          "slug": "best-materials-for-your-rug",
+          "publishDate": "2025-02-05",
+          "category": "Guides"
+        },
+        {
+          "title": "Why Choosing the Right Bath Rug Matters for Safety and Style",
+          "slug": "why-choosing-the-right-bath-rug-matters",
+          "publishDate": "2025-02-01",
+          "category": "Guides"
+        }
+      ]
+    },
+    {
+      "slug": "best-shower-curtains",
+      "name": "Best Shower Curtains",
+      "domain": "best-shower-curtains.com",
+      "status": "active",
+      "colors": {
+        "primary": "#00695C",
+        "accent": "#FF6F00"
+      },
+      "articles": [
+        {
+          "title": "Best Fabric Shower Curtains: Premium Options for Luxury Bathrooms in 2024",
+          "slug": "best-fabric-shower-curtains",
+          "publishDate": "2026-02-17",
+          "category": "Reviews"
+        },
+        {
+          "title": "Best Shower Curtains for Mold Prevention: Expert Guide 2024",
+          "slug": "best-shower-curtains-mold-prevention",
+          "publishDate": "2026-02-16",
+          "category": "Guides"
+        },
+        {
+          "title": "Top 7 Best Shower Curtains of 2026: Complete Buyer's Guide",
+          "slug": "top-7-best-shower-curtains-of-2026",
+          "publishDate": "2026-02-01",
+          "category": "Reviews"
+        },
+        {
+          "title": "Fabric vs Vinyl vs PEVA Shower Curtains: Which Material Is Best?",
+          "slug": "fabric-vs-vinyl-vs-peva-shower-curtains",
+          "publishDate": "2026-02-02",
+          "category": "Comparisons"
+        },
+        {
+          "title": "Why Choosing the Right Shower Curtain Matters More Than You Think",
+          "slug": "why-choosing-the-right-shower-curtain-matters",
+          "publishDate": "2026-02-02",
+          "category": "Guides"
+        },
+        {
+          "title": "Best Waterproof Shower Curtains That Actually Keep Water In",
+          "slug": "best-waterproof-shower-curtains",
+          "publishDate": "2026-02-02",
+          "category": "Reviews"
+        },
+        {
+          "title": "How to Clean and Maintain Your Shower Curtain (Complete Guide)",
+          "slug": "how-to-clean-shower-curtain",
+          "publishDate": "2026-02-02",
+          "category": "Guides"
+        },
+        {
+          "title": "Best Mildew-Resistant Shower Curtains for Humid Bathrooms",
+          "slug": "best-mildew-resistant-shower-curtains",
+          "publishDate": "2026-02-02",
+          "category": "Reviews"
+        },
+        {
+          "title": "Shower Curtain vs Glass Door: Which Is Better for Your Bathroom?",
+          "slug": "shower-curtain-vs-glass-door",
+          "publishDate": "2026-02-03",
+          "category": "Comparisons"
+        },
+        {
+          "title": "Best Shower Curtains for Small Bathrooms (2026)",
+          "slug": "best-shower-curtains-for-small-bathrooms",
+          "publishDate": "2026-02-04",
+          "category": "Reviews"
+        }
+      ]
+    }
+  ],
+  "stats": {
+    "totalArticles": 23,
+    "totalBlogs": 2,
+    "activeBlogs": 2,
+    "lastUpdated": "2026-02-18T04:13:00Z"
+  }
+}
