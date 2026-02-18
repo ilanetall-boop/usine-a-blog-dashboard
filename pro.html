@@ -531,10 +531,18 @@
 
         async function loadData() {
             try {
-                const response = await fetch('data.json');
+                // Force refresh with timestamp to bypass cache
+                const url = `data.json?t=${Date.now()}`;
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 dashboardData = await response.json();
+                console.log('✓ Data loaded successfully!');
+                console.log('Blogs:', dashboardData.blogs.map(b => b.name));
+                console.log('Total articles:', dashboardData.blogs.reduce((sum, b) => sum + (b.articles?.length || 0), 0));
+                console.log('Stats:', dashboardData.stats);
             } catch (error) {
                 console.error('Error loading data:', error);
+                alert('Error loading data! Check console.');
             }
         }
 
@@ -549,13 +557,29 @@
                 totalArticles += (blog.articles?.length || 0);
             });
 
+            // Find latest post
+            let latestPost = null;
+            let latestBlog = null;
+            let latestDate = new Date(0);
+            
+            blogs.forEach(blog => {
+                (blog.articles || []).forEach(article => {
+                    const date = new Date(article.publishDate);
+                    if (date > latestDate) {
+                        latestDate = date;
+                        latestPost = article.title;
+                        latestBlog = blog.name;
+                    }
+                });
+            });
+
             const kpis = [
                 { label: 'Total Articles', value: totalArticles.toString(), unit: 'Published', meta: 'All blogs' },
                 { label: 'Total Blogs', value: blogs.length.toString(), unit: 'Active', meta: 'Affiliate network' },
-                { label: 'Bath Rugs Blog', value: blogs[0]?.articles?.length?.toString() || '0', unit: 'Articles', meta: 'bestbathrugs.com' },
-                { label: 'Shower Curtains', value: blogs[1]?.articles?.length?.toString() || '0', unit: 'Articles', meta: 'best-shower-curtains.com' },
-                { label: 'Latest Post', value: 'Today', unit: 'Feb 17, 2026', meta: 'Memory foam bath rugs' },
-                { label: 'SEO Status', value: '✓', unit: 'Optimized', meta: 'All articles indexed' }
+                { label: 'Bath Rugs Blog', value: (blogs[0]?.articles?.length || 0).toString(), unit: 'Articles', meta: 'bestbathrugs.com' },
+                { label: 'Shower Curtains', value: (blogs[1]?.articles?.length || 0).toString(), unit: 'Articles', meta: 'best-shower-curtains.com' },
+                { label: 'Latest Article', value: latestPost ? latestPost.substring(0, 25) + '...' : 'N/A', unit: latestBlog || '', meta: 'Recently published' },
+                { label: 'SEO Status', value: '✓', unit: `${totalArticles} indexed`, meta: 'Ready for Google' }
             ];
 
             const grid = document.getElementById('kpiGrid');
@@ -687,10 +711,13 @@
 
         // Initialize
         document.addEventListener('DOMContentLoaded', async function() {
+            console.log('Starting dashboard initialization...');
             await loadData();
+            console.log('Data loaded, rendering components...');
             renderKpiGrid();
             renderBlogsTable();
             renderTrafficChart();
+            console.log('Dashboard rendered successfully!');
         });
     </script>
 </body>
