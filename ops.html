@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NECLID - Tableau de Pilotage</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #F5F7FA; color: #1a1a1a; }
+        
+        .header { background: white; border-bottom: 1px solid #ddd; padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+        .logo { font-size: 1.6em; font-weight: 800; color: #2563EB; }
+        .user { display: flex; gap: 15px; align-items: center; }
+        
+        .container { max-width: 1800px; margin: 0 auto; padding: 30px 40px; }
+        
+        /* GRID LAYOUT */
+        .dashboard { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 20px; margin-bottom: 30px; }
+        
+        /* BIG KPIs */
+        .kpi-big { background: white; border-left: 4px solid #2563EB; padding: 25px; border-radius: 8px; }
+        .kpi-big.alert { border-left-color: #ef4444; }
+        .kpi-big.success { border-left-color: #16a34a; }
+        .kpi-label { color: #666; font-size: 0.9em; text-transform: uppercase; font-weight: 600; margin-bottom: 8px; }
+        .kpi-big-value { font-size: 2.8em; font-weight: 700; color: #1a1a1a; line-height: 1; }
+        .kpi-sub { color: #999; font-size: 0.85em; margin-top: 8px; }
+        
+        /* CONTROL PANEL */
+        .control-panel { background: white; border-radius: 8px; border: 1px solid #e0e0e0; padding: 25px; margin-bottom: 30px; }
+        .control-title { font-size: 1.2em; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+        .control-buttons { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+        
+        .btn { padding: 12px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.3s; font-size: 0.9em; }
+        .btn-primary { background: #2563EB; color: white; }
+        .btn-primary:hover { background: #1d4ed8; box-shadow: 0 4px 12px rgba(37,99,235,0.3); }
+        .btn-secondary { background: #f0f0f0; color: #1a1a1a; border: 1px solid #ddd; }
+        .btn-secondary:hover { background: #e8e8e8; }
+        .btn-danger { background: #ef4444; color: white; }
+        .btn-success { background: #16a34a; color: white; }
+        
+        /* ALERTS */
+        .alerts { background: white; border-radius: 8px; border: 1px solid #e0e0e0; padding: 25px; margin-bottom: 30px; }
+        .alerts-title { font-size: 1.1em; font-weight: 700; margin-bottom: 15px; }
+        .alert-item { background: #fef3c7; border-left: 4px solid #f59e0b; padding: 15px; margin-bottom: 10px; border-radius: 4px; }
+        .alert-item.error { background: #fee2e2; border-left-color: #ef4444; }
+        .alert-item.success { background: #dcfce7; border-left-color: #16a34a; }
+        .alert-text { margin: 0; color: #1a1a1a; }
+        .alert-time { color: #999; font-size: 0.85em; margin-top: 5px; }
+        
+        /* BLOGS TABLE */
+        .table-section { background: white; border-radius: 8px; border: 1px solid #e0e0e0; overflow: hidden; }
+        .table-header { padding: 20px 25px; border-bottom: 1px solid #e0e0e0; font-size: 1.1em; font-weight: 700; }
+        
+        table { width: 100%; border-collapse: collapse; }
+        th { padding: 15px 25px; text-align: left; background: #f9f9f9; border-bottom: 2px solid #e0e0e0; font-weight: 600; font-size: 0.9em; text-transform: uppercase; color: #666; }
+        td { padding: 15px 25px; border-bottom: 1px solid #f0f0f0; }
+        tr:hover { background: #f9f9f9; }
+        
+        .status { display: inline-block; padding: 6px 12px; border-radius: 12px; font-size: 0.85em; font-weight: 600; }
+        .status.active { background: #d1fae5; color: #065f46; }
+        .status.alert { background: #fecaca; color: #7f1d1d; }
+        
+        .action-links { display: flex; gap: 8px; }
+        .action-links a { padding: 6px 12px; background: #2563EB; color: white; border-radius: 4px; text-decoration: none; font-size: 0.85em; font-weight: 600; }
+        .action-links a:hover { background: #1d4ed8; }
+        
+        /* RECENT ARTICLES */
+        .article-item { background: white; border-left: 4px solid #2563EB; padding: 15px; margin-bottom: 10px; border-radius: 4px; }
+        .article-title { font-weight: 600; color: #1a1a1a; margin-bottom: 5px; }
+        .article-meta { color: #999; font-size: 0.85em; }
+        
+        /* GRID 2 */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 30px; }
+        @media (max-width: 1024px) { .grid-2 { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <div class="header">
+        <div class="logo">⚡ NECLID Control</div>
+        <div class="user">
+            <span style="color: #999;">Ilane Tall</span>
+            <span style="width: 36px; height: 36px; background: #2563EB; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700;">IT</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- BIG KPIs -->
+        <div class="dashboard">
+            <div class="kpi-big success">
+                <div class="kpi-label">🟢 Réseau Actif</div>
+                <div class="kpi-big-value">2/2</div>
+                <div class="kpi-sub">Blogs en production</div>
+            </div>
+            <div class="kpi-big">
+                <div class="kpi-label">📰 Articles Générés</div>
+                <div class="kpi-big-value">23</div>
+                <div class="kpi-sub">+2 aujourd'hui</div>
+            </div>
+            <div class="kpi-big">
+                <div class="kpi-label">⚙️ Agents Actifs</div>
+                <div class="kpi-big-value">3/3</div>
+                <div class="kpi-sub">Generator, Publisher, Indexer</div>
+            </div>
+            <div class="kpi-big">
+                <div class="kpi-label">📊 Santé Réseau</div>
+                <div class="kpi-big-value">94%</div>
+                <div class="kpi-sub">Performance optimale</div>
+            </div>
+        </div>
+
+        <!-- CONTROL PANEL -->
+        <div class="control-panel">
+            <div class="control-title">🎮 Panneau de Contrôle</div>
+            <div class="control-buttons">
+                <button class="btn btn-primary" onclick="alert('✨ Lancement du générateur d\'articles...')">✨ Générer Article</button>
+                <button class="btn btn-primary" onclick="alert('🚀 Déploiement en cours...')">🚀 Déployer Maintenant</button>
+                <button class="btn btn-secondary" onclick="alert('📊 Affichage des rapports...')">📊 Voir Rapports</button>
+                <button class="btn btn-secondary" onclick="alert('⚙️ Configuration des agents...')">⚙️ Agents</button>
+                <button class="btn btn-secondary" onclick="alert('🔍 Analyse SEO...')">🔍 SEO Analysis</button>
+                <button class="btn btn-secondary" onclick="alert('💰 Revenue Dashboard...')">💰 Revenue</button>
+            </div>
+        </div>
+
+        <!-- ALERTS & STATUS -->
+        <div class="alerts">
+            <div class="alerts-title">🔔 Alertes & Notifications</div>
+            <div class="alert-item success">
+                <p class="alert-text">✅ Tous les articles sont indexés par Google</p>
+                <div class="alert-time">il y a 2 heures</div>
+            </div>
+            <div class="alert-item">
+                <p class="alert-text">⚠️ Production en dessous de la cible: 2 articles/semaine (cible: 3)</p>
+                <div class="alert-time">il y a 5 heures</div>
+            </div>
+            <div class="alert-item success">
+                <p class="alert-text">✅ Dernier déploiement réussi (bestbathrugs.com + best-shower-curtains.com)</p>
+                <div class="alert-time">il y a 10 heures</div>
+            </div>
+        </div>
+
+        <!-- GRID 2: BLOGS + RECENT -->
+        <div class="grid-2">
+            <!-- BLOGS -->
+            <div class="table-section">
+                <div class="table-header">🌐 État des Blogs</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Blog</th>
+                            <th>Articles</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>bestbathrugs.com</strong></td>
+                            <td>13</td>
+                            <td><span class="status active">✓ En ligne</span></td>
+                            <td><div class="action-links"><a href="#">Détails</a><a href="#" style="background: #059669;">Générer</a></div></td>
+                        </tr>
+                        <tr>
+                            <td><strong>best-shower-curtains.com</strong></td>
+                            <td>10</td>
+                            <td><span class="status active">✓ En ligne</span></td>
+                            <td><div class="action-links"><a href="#">Détails</a><a href="#" style="background: #059669;">Générer</a></div></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- RECENT ARTICLES -->
+            <div>
+                <div style="font-size: 1.1em; font-weight: 700; margin-bottom: 15px;">📰 Derniers Articles</div>
+                <div class="article-item">
+                    <div class="article-title">Best Fabric Shower Curtains 2024</div>
+                    <div class="article-meta">best-shower-curtains.com • Aujourd'hui • 3500 words</div>
+                </div>
+                <div class="article-item">
+                    <div class="article-title">Best Memory Foam Bath Rugs 2024</div>
+                    <div class="article-meta">bestbathrugs.com • Aujourd'hui • 2800 words</div>
+                </div>
+                <div class="article-item">
+                    <div class="article-title">Best Shower Curtains for Mold Prevention</div>
+                    <div class="article-meta">best-shower-curtains.com • Hier • 3200 words</div>
+                </div>
+                <div class="article-item">
+                    <div class="article-title">Best Bath Rugs for Elderly</div>
+                    <div class="article-meta">bestbathrugs.com • Hier • 2500 words</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DEPLOYMENT STATUS -->
+        <div class="table-section">
+            <div class="table-header">🚀 Statut des Déploiements</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Ressource</th>
+                        <th>Statut</th>
+                        <th>Dernier Déploiement</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>GitHub Repos</td>
+                        <td><span class="status active">✓ Synchronisé</span></td>
+                        <td>il y a 5 min</td>
+                        <td><a href="https://github.com/ilanetall-boop" target="_blank" style="color: #2563EB; text-decoration: none; font-weight: 600;">Voir →</a></td>
+                    </tr>
+                    <tr>
+                        <td>Cloudflare (bestbathrugs.com)</td>
+                        <td><span class="status active">✓ Online</span></td>
+                        <td>il y a 2h</td>
+                        <td><a href="https://bestbathrugs.com" target="_blank" style="color: #2563EB; text-decoration: none; font-weight: 600;">Visiter →</a></td>
+                    </tr>
+                    <tr>
+                        <td>Cloudflare (best-shower-curtains.com)</td>
+                        <td><span class="status active">✓ Online</span></td>
+                        <td>il y a 2h</td>
+                        <td><a href="https://best-shower-curtains.com" target="_blank" style="color: #2563EB; text-decoration: none; font-weight: 600;">Visiter →</a></td>
+                    </tr>
+                    <tr>
+                        <td>Google Indexing</td>
+                        <td><span class="status" style="background: #fef3c7; color: #92400e;">⏳ In Progress</span></td>
+                        <td>23/23 pages</td>
+                        <td><a href="#" style="color: #2563EB; text-decoration: none; font-weight: 600;">Soumettre →</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- QUICK STATS -->
+        <div style="margin-top: 30px; background: white; border-radius: 8px; border: 1px solid #e0e0e0; padding: 25px;">
+            <div style="font-size: 1.1em; font-weight: 700; margin-bottom: 20px;">📈 Métriques Opérationnelles</div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+                <div>
+                    <div style="color: #999; font-size: 0.85em; text-transform: uppercase; font-weight: 600; margin-bottom: 8px;">Taux Production</div>
+                    <div style="font-size: 1.8em; font-weight: 700;">2/sem</div>
+                    <div style="color: #f59e0b; font-size: 0.85em;">Cible: 3/sem ⚠️</div>
+                </div>
+                <div>
+                    <div style="color: #999; font-size: 0.85em; text-transform: uppercase; font-weight: 600; margin-bottom: 8px;">Santé Blogs</div>
+                    <div style="font-size: 1.8em; font-weight: 700;">94%</div>
+                    <div style="color: #16a34a; font-size: 0.85em;">Excellent ✓</div>
+                </div>
+                <div>
+                    <div style="color: #999; font-size: 0.85em; text-transform: uppercase; font-weight: 600; margin-bottom: 8px;">Diversité Contenu</div>
+                    <div style="font-size: 1.8em; font-weight: 700;">4</div>
+                    <div style="color: #2563eb; font-size: 0.85em;">Catégories</div>
+                </div>
+                <div>
+                    <div style="color: #999; font-size: 0.85em; text-transform: uppercase; font-weight: 600; margin-bottom: 8px;">Uptime</div>
+                    <div style="font-size: 1.8em; font-weight: 700;">100%</div>
+                    <div style="color: #16a34a; font-size: 0.85em;">Tous les services</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>
