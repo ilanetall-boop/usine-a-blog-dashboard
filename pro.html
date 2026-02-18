@@ -466,8 +466,8 @@
         <!-- CHART -->
         <div class="chart-container">
             <div class="chart-header">
-                <div class="chart-title">📈 Traffic Overview</div>
-                <div class="chart-period">Last 30 Days</div>
+                <div class="chart-title">📝 Articles Published (Last 30 Days)</div>
+                <div class="chart-period">Real data from blog articles</div>
             </div>
             <div class="chart-wrapper">
                 <canvas id="trafficChart"></canvas>
@@ -701,13 +701,23 @@
                 </div>
             `;
             
+            deployHtml += `
+                <div class="deploy-item">
+                    <div class="deploy-icon">✅</div>
+                    <div class="deploy-content">
+                        <h4>Cloudflare Deploy</h4>
+                        <p>Active • Both sites live</p>
+                    </div>
+                </div>
+            `;
+
             blogs.forEach(blog => {
                 deployHtml += `
                     <div class="deploy-item">
                         <div class="deploy-icon">✅</div>
                         <div class="deploy-content">
-                            <h4>${blog.name}</h4>
-                            <p>Online • ${blog.domain}</p>
+                            <h4>${blog.domain}</h4>
+                            <p>Online via Cloudflare</p>
                         </div>
                     </div>
                 `;
