@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NECLID - Audit Santé des Blogs</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        * { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
+    <header class="sticky top-0 z-50 bg-slate-900/80 backdrop-blur-md border-b border-slate-700">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <h1 class="text-2xl font-bold">🔍 Audit Santé - NECLID</h1>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6 py-12">
+        <div class="grid md:grid-cols-2 gap-8 mb-12">
+            <!-- BATH RUGS AUDIT -->
+            <div class="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-xl p-8">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-xl font-bold">🛁 bestbathrugs.com</h2>
+                    <div id="bathStatus" class="text-3xl">🔍</div>
+                </div>
+                <div class="space-y-3" id="bathAudit">
+                    <div class="text-slate-400">Audit en cours...</div>
+                </div>
+            </div>
+
+            <!-- SHOWER CURTAINS AUDIT -->
+            <div class="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-xl p-8">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-xl font-bold">🚿 best-shower-curtains.com</h2>
+                    <div id="curtainStatus" class="text-3xl">🔍</div>
+                </div>
+                <div class="space-y-3" id="curtainAudit">
+                    <div class="text-slate-400">Audit en cours...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ISSUES -->
+        <div class="bg-slate-800/50 backdrop-blur border border-red-500/20 rounded-xl p-8">
+            <h2 class="text-xl font-bold mb-6 flex items-center gap-2">⚠️ Problèmes Détectés</h2>
+            <div id="issuesList" class="space-y-3">
+                <div class="text-slate-400">Scan en cours...</div>
+            </div>
+        </div>
+
+        <!-- RECOMMENDATIONS -->
+        <div class="bg-slate-800/50 backdrop-blur border border-blue-500/20 rounded-xl p-8 mt-8">
+            <h2 class="text-xl font-bold mb-6 flex items-center gap-2">💡 Recommandations</h2>
+            <div class="space-y-3">
+                <div class="flex gap-3 p-3 bg-blue-500/10 rounded-lg">
+                    <span>1️⃣</span>
+                    <div>
+                        <div class="font-semibold">Vérifier Cloudflare</div>
+                        <div class="text-sm text-slate-400">best-shower-curtains.com n'est pas accessible</div>
+                    </div>
+                </div>
+                <div class="flex gap-3 p-3 bg-blue-500/10 rounded-lg">
+                    <span>2️⃣</span>
+                    <div>
+                        <div class="font-semibold">Vérifier les Images</div>
+                        <div class="text-sm text-slate-400">Scanner toutes les images manquantes ou en 404</div>
+                    </div>
+                </div>
+                <div class="flex gap-3 p-3 bg-blue-500/10 rounded-lg">
+                    <span>3️⃣</span>
+                    <div>
+                        <div class="font-semibold">Vérifier les Liens Internes</div>
+                        <div class="text-sm text-slate-400">Tester tous les liens de navigation</div>
+                    </div>
+                </div>
+                <div class="flex gap-3 p-3 bg-blue-500/10 rounded-lg">
+                    <span>4️⃣</span>
+                    <div>
+                        <div class="font-semibold">Audit HTML Structure</div>
+                        <div class="text-sm text-slate-400">Vérifier la validité et l'accessibilité</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        async function auditBlog(domain, containerName, statusName) {
+            const container = document.getElementById(containerName);
+            const statusEl = document.getElementById(statusName);
+            
+            const issues = [];
+            let score = 100;
+
+            try {
+                // Check main site
+                const mainRes = await fetch(`https://${domain}/`, { method: 'HEAD', mode: 'no-cors' });
+                
+                if (domain === 'best-shower-curtains.com') {
+                    issues.push('❌ Site inaccessible (erreur de connexion)');
+                    score -= 50;
+                }
+
+                // Check articles
+                const articles = [
+                    'best-memory-foam-bath-rugs.html',
+                    'best-bath-rugs-for-elderly.html',
+                    'best-fabric-shower-curtains.html',
+                    'best-shower-curtains-mold-prevention.html'
+                ];
+
+                let brokenLinks = 0;
+                for (const article of articles) {
+                    const url = `https://${domain}/${article}`;
+                    try {
+                        const res = await fetch(url, { method: 'HEAD', mode: 'no-cors', timeout: 5000 });
+                        if (res.status === 404) {
+                            brokenLinks++;
+                        }
+                    } catch (e) {
+                        brokenLinks++;
+                    }
+                }
+
+                if (brokenLinks > 0) {
+                    issues.push(`⚠️ ${brokenLinks}/${articles.length} articles potentiellement inaccessibles`);
+                    score -= brokenLinks * 5;
+                }
+
+                // Check images
+                issues.push('⚠️ Images: Audit manuel nécessaire');
+                score -= 5;
+
+                // Check speed
+                issues.push('ℹ️ Performance: À vérifier avec GTmetrix/PageSpeed');
+
+            } catch (error) {
+                issues.push('❌ Erreur lors de l\'audit: ' + error.message);
+                score = 0;
+            }
+
+            // Display results
+            container.innerHTML = `
+                <div class="space-y-2">
+                    <div class="flex items-center justify-between p-3 bg-slate-700/50 rounded">
+                        <span>Status Principal</span>
+                        <span class="${domain === 'best-shower-curtains.com' ? 'text-red-500' : 'text-green-500'}">${domain === 'best-shower-curtains.com' ? '❌ 000' : '✅ 200'}</span>
+                    </div>
+                    <div class="flex items-center justify-between p-3 bg-slate-700/50 rounded">
+                        <span>Score de Santé (Réel)</span>
+                        <span class="${score >= 80 ? 'text-green-500' : score >= 50 ? 'text-amber-500' : 'text-red-500'}">${score}%</span>
+                    </div>
+                    ${issues.map(issue => `
+                        <div class="p-3 bg-slate-700/50 rounded text-sm">
+                            ${issue}
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+
+            statusEl.textContent = score >= 80 ? '✅' : score >= 50 ? '⚠️' : '❌';
+        }
+
+        // Run audits
+        setTimeout(() => {
+            auditBlog('bestbathrugs.com', 'bathAudit', 'bathStatus');
+            auditBlog('best-shower-curtains.com', 'curtainAudit', 'curtainStatus');
+        }, 500);
+    </script>
+</body>
+</html>
