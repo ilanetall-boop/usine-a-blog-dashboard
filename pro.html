@@ -500,29 +500,7 @@
         <div class="chart-header" style="margin-bottom: 20px;">
             <div class="chart-title">🚀 Deployment Status</div>
         </div>
-        <div class="deploy-status">
-            <div class="deploy-item">
-                <div class="deploy-icon">✅</div>
-                <div class="deploy-content">
-                    <h4>GitHub Deploy</h4>
-                    <p>Success • 2 min ago</p>
-                </div>
-            </div>
-            <div class="deploy-item">
-                <div class="deploy-icon">✅</div>
-                <div class="deploy-content">
-                    <h4>Netlify Deploy</h4>
-                    <p>Online • bestbathrugs.com</p>
-                </div>
-            </div>
-            <div class="deploy-item">
-                <div class="deploy-icon">⏳</div>
-                <div class="deploy-content">
-                    <h4>Google Indexing</h4>
-                    <p>In Progress • 23/23 pages</p>
-                </div>
-            </div>
-        </div>
+        <div class="deploy-status" id="deployStatus"></div>
     </div>
 
     <script>
@@ -709,6 +687,45 @@
             });
         }
 
+        // Render Deploy Status
+        function renderDeployStatus() {
+            const blogs = dashboardData.blogs || [];
+            
+            let deployHtml = `
+                <div class="deploy-item">
+                    <div class="deploy-icon">✅</div>
+                    <div class="deploy-content">
+                        <h4>GitHub Repos</h4>
+                        <p>Synced • ${blogs.map(b => b.domain).join(', ')}</p>
+                    </div>
+                </div>
+            `;
+            
+            blogs.forEach(blog => {
+                deployHtml += `
+                    <div class="deploy-item">
+                        <div class="deploy-icon">✅</div>
+                        <div class="deploy-content">
+                            <h4>${blog.name}</h4>
+                            <p>Online • ${blog.domain}</p>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            deployHtml += `
+                <div class="deploy-item">
+                    <div class="deploy-icon">⏳</div>
+                    <div class="deploy-content">
+                        <h4>Google Indexing</h4>
+                        <p>In Progress • ${blogs.reduce((sum, b) => sum + (b.articles?.length || 0), 0)}/23 pages</p>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('deployStatus').innerHTML = deployHtml;
+        }
+
         // Initialize
         document.addEventListener('DOMContentLoaded', async function() {
             console.log('Starting dashboard initialization...');
@@ -717,6 +734,7 @@
             renderKpiGrid();
             renderBlogsTable();
             renderTrafficChart();
+            renderDeployStatus();
             console.log('Dashboard rendered successfully!');
         });
     </script>
