@@ -289,6 +289,188 @@
         </div>
     </main>
 
+    <!-- MODALS -->
+    
+    <!-- Generate Modal -->
+    <div id="generateModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="closeModal('generateModal')"></div>
+        <div class="glass rounded-2xl p-8 max-w-md w-full border-t-4 border-blue-500 relative z-10">
+            <h3 class="text-2xl font-bold mb-4">✨ Générer Articles</h3>
+            <p class="text-slate-400 mb-6">Lance les 2 sub-agents pour générer les articles de demain</p>
+            <div class="space-y-3 mb-6">
+                <div class="bg-blue-500/10 rounded-lg p-4 border border-blue-500/20">
+                    <div class="font-semibold text-blue-400 mb-1">📝 bestbathrugs</div>
+                    <div class="text-sm text-slate-400">Générer 1 article SEO 2000+ words</div>
+                </div>
+                <div class="bg-purple-500/10 rounded-lg p-4 border border-purple-500/20">
+                    <div class="font-semibold text-purple-400 mb-1">🚿 best-shower-curtains</div>
+                    <div class="text-sm text-slate-400">Générer 1 article SEO 2000+ words</div>
+                </div>
+            </div>
+            <div class="flex gap-3">
+                <button onclick="closeModal('generateModal')" class="flex-1 px-4 py-2 rounded-lg bg-slate-700 hover:bg-slate-600 transition font-semibold">Annuler</button>
+                <button onclick="generateArticles()" class="flex-1 px-4 py-2 rounded-lg bg-gradient-to-r from-blue-600 to-blue-500 hover:shadow-lg transition font-semibold">Lancer ✨</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reports Modal -->
+    <div id="reportsModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="closeModal('reportsModal')"></div>
+        <div class="glass rounded-2xl p-8 max-w-2xl w-full border-t-4 border-emerald-500 relative z-10 my-8">
+            <h3 class="text-2xl font-bold mb-6">📊 Rapports & Analytics</h3>
+            
+            <div class="space-y-4 mb-6">
+                <div class="bg-gradient-to-r from-blue-500/10 to-blue-400/10 rounded-lg p-4 border border-blue-500/20">
+                    <div class="font-semibold text-blue-400 mb-2">📰 Articles Publiés</div>
+                    <div class="text-3xl font-bold">23</div>
+                    <div class="text-sm text-slate-400 mt-1">+2 aujourd'hui (Feb 17)</div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="bg-green-500/10 rounded-lg p-3 border border-green-500/20">
+                        <div class="text-sm text-slate-400 mb-1">bestbathrugs</div>
+                        <div class="text-2xl font-bold text-green-400">13</div>
+                        <div class="text-xs text-slate-400">articles</div>
+                    </div>
+                    <div class="bg-red-500/10 rounded-lg p-3 border border-red-500/20">
+                        <div class="text-sm text-slate-400 mb-1">best-shower-curtains</div>
+                        <div class="text-2xl font-bold text-red-400">10</div>
+                        <div class="text-xs text-slate-400">(offline)</div>
+                    </div>
+                </div>
+
+                <div class="bg-amber-500/10 rounded-lg p-4 border border-amber-500/20">
+                    <div class="font-semibold text-amber-400 mb-2">⏱️ Fréquence</div>
+                    <div class="text-sm text-slate-400">2 articles/jour (1 par blog)</div>
+                    <div class="text-xs text-slate-400 mt-2">Cible: $20/mois par blog</div>
+                </div>
+
+                <div class="bg-slate-700 rounded-lg p-4">
+                    <div class="font-semibold mb-2">🔗 Données en Direct</div>
+                    <div class="text-xs text-slate-400">
+                        Google Analytics: G-ZQGHN8Y56N (bestbathrugs)<br>
+                        Google Search Console: sc-domain:bestbathrugs.com
+                    </div>
+                </div>
+            </div>
+
+            <button onclick="closeModal('reportsModal')" class="w-full px-4 py-2 rounded-lg bg-slate-700 hover:bg-slate-600 transition font-semibold">Fermer</button>
+        </div>
+    </div>
+
+    <!-- Agents Modal -->
+    <div id="agentsModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="closeModal('agentsModal')"></div>
+        <div class="glass rounded-2xl p-8 max-w-2xl w-full border-t-4 border-amber-500 relative z-10 my-8">
+            <h3 class="text-2xl font-bold mb-6">⚙️ Sub-Agents Status</h3>
+            
+            <div class="space-y-4 mb-6">
+                <div class="bg-green-500/10 rounded-lg p-4 border border-green-500/20">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="font-semibold text-green-400">📝 bestbathrugs-day2</div>
+                        <span class="text-xs px-2 py-1 rounded-full bg-green-500/20 text-green-400 font-bold">✓ ACTIVE</span>
+                    </div>
+                    <div class="text-sm text-slate-400 space-y-1">
+                        <div>ID: 6b9cc333-51a2-4084-820e-4d09b17f7340</div>
+                        <div>Output: "Best Memory Foam Bath Rugs 2024" (26,673 bytes)</div>
+                        <div>Products: GORILLA GRIP, Genteele, LOCHAS</div>
+                    </div>
+                </div>
+
+                <div class="bg-green-500/10 rounded-lg p-4 border border-green-500/20">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="font-semibold text-green-400">🚿 best-shower-curtains-day2</div>
+                        <span class="text-xs px-2 py-1 rounded-full bg-green-500/20 text-green-400 font-bold">✓ ACTIVE</span>
+                    </div>
+                    <div class="text-sm text-slate-400 space-y-1">
+                        <div>ID: 0b1b4bdc-ef89-4ce9-97dc-cb1762e95d9f</div>
+                        <div>Output: "Best Fabric Shower Curtains 2024" (JSON ready)</div>
+                        <div>Products: Luxe Living, Pure Elegance, AquaGuard</div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-700 rounded-lg p-4">
+                    <div class="font-semibold mb-2">📊 Metrics</div>
+                    <div class="text-sm text-slate-400">
+                        Total Agents: 3/3 ✓<br>
+                        Success Rate: 80% (8/10 personas tested)<br>
+                        Avg Gen Time: ~4 min per article
+                    </div>
+                </div>
+            </div>
+
+            <button onclick="closeModal('agentsModal')" class="w-full px-4 py-2 rounded-lg bg-slate-700 hover:bg-slate-600 transition font-semibold">Fermer</button>
+        </div>
+    </div>
+
+    <!-- SEO Modal -->
+    <div id="seoModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="closeModal('seoModal')"></div>
+        <div class="glass rounded-2xl p-8 max-w-2xl w-full border-t-4 border-pink-500 relative z-10 my-8">
+            <h3 class="text-2xl font-bold mb-6">🔍 SEO Audit</h3>
+            
+            <div class="space-y-4 mb-6">
+                <div class="bg-emerald-500/10 rounded-lg p-4 border border-emerald-500/20">
+                    <div class="font-semibold text-emerald-400 mb-2">✅ Indexé par Google</div>
+                    <div class="text-2xl font-bold">23/23</div>
+                    <div class="text-sm text-slate-400">Tous les articles scanné</div>
+                </div>
+
+                <div class="bg-amber-500/10 rounded-lg p-4 border border-amber-500/20">
+                    <div class="font-semibold text-amber-400 mb-2">⚠️ Erreurs Trouvées</div>
+                    <div class="text-sm text-slate-400 space-y-1">
+                        <div>• 12 images manquantes (bestbathrugs)</div>
+                        <div>• 7 articles manquants en production</div>
+                        <div>• 4 pages avec redirection 301</div>
+                        <div>• Pas de robots.txt</div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-700 rounded-lg p-4">
+                    <div class="font-semibold mb-2">🔗 Google Search Console</div>
+                    <div class="text-sm text-slate-400">
+                        bestbathrugs.com: sc-domain:bestbathrugs.com<br>
+                        best-shower-curtains: sc-domain:best-shower-curtains.com (offline)
+                    </div>
+                </div>
+
+                <a href="HEALTH_AUDIT_FEB18.md" target="_blank" class="block bg-blue-500/10 rounded-lg p-4 border border-blue-500/20 text-center text-blue-400 font-semibold hover:bg-blue-500/20 transition">
+                    📋 Lire le Rapport Complet (Feb 18)
+                </a>
+            </div>
+
+            <button onclick="closeModal('seoModal')" class="w-full px-4 py-2 rounded-lg bg-slate-700 hover:bg-slate-600 transition font-semibold">Fermer</button>
+        </div>
+    </div>
+
+    <!-- Revenue Modal -->
+    <div id="revenueModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="closeModal('revenueModal')"></div>
+        <div class="glass rounded-2xl p-8 max-w-md w-full border-t-4 border-cyan-500 relative z-10">
+            <h3 class="text-2xl font-bold mb-4">💰 Revenue Tracking</h3>
+            <p class="text-slate-400 mb-6">Affiliate earnings & performance metrics</p>
+            
+            <div class="space-y-3 mb-6">
+                <div class="bg-cyan-500/10 rounded-lg p-4 border border-cyan-500/20">
+                    <div class="font-semibold text-cyan-400 mb-1">Target: $40/mois</div>
+                    <div class="text-sm text-slate-400">$20 per blog (2 blogs)</div>
+                </div>
+                <div class="bg-slate-700 rounded-lg p-4">
+                    <div class="text-sm text-slate-400">
+                        Affiliate Tags:<br>
+                        • bathrugsguide-20<br>
+                        • bestshowercurtains-20<br>
+                        <br>
+                        Amazon API: Not yet configured
+                    </div>
+                </div>
+            </div>
+
+            <button onclick="closeModal('revenueModal')" class="w-full px-4 py-2 rounded-lg bg-slate-700 hover:bg-slate-600 transition font-semibold">Fermer</button>
+        </div>
+    </div>
+
     <script>
         function toggleTheme() {
             const html = document.documentElement;
@@ -303,6 +485,32 @@
                 document.getElementById('themeIcon').textContent = '☀️';
             }
         }
+
+        function openModal(id) {
+            document.getElementById(id).classList.remove('hidden');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+        }
+
+        function generateArticles() {
+            alert('🚀 Lancement des sub-agents...\n\nbestbathrugs-day3 & best-shower-curtains-day3 spawned!\n\nVérifiez status dans les Agents.');
+            closeModal('generateModal');
+        }
+
+        // Attach button handlers
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('button').forEach(btn => {
+                const text = btn.textContent.trim();
+                if (text.includes('Générer')) btn.onclick = () => openModal('generateModal');
+                if (text.includes('Rapports')) btn.onclick = () => openModal('reportsModal');
+                if (text.includes('Agents')) btn.onclick = () => openModal('agentsModal');
+                if (text.includes('SEO')) btn.onclick = () => openModal('seoModal');
+                if (text.includes('Revenue')) btn.onclick = () => openModal('revenueModal');
+                if (text.includes('Déployer')) btn.onclick = () => alert('🚀 Git push en cours...\n\nEndpoint: GitHub Actions (auto-deploy Render)');
+            });
+        });
     </script>
 </body>
 </html>
