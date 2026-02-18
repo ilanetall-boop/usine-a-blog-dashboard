@@ -348,45 +348,24 @@
     </div>
 
     <script>
-        // Data import
-        const blogsRegistry = {
-            "blogs": [
-                {
-                    "slug": "best-bath-rugs",
-                    "name": "Best Bath Rugs",
-                    "domain": "bestbathrugs.com",
-                    "status": "active",
-                    "colors": {
-                        "primary": "#5D4037",
-                        "accent": "#FF7043"
-                    }
-                },
-                {
-                    "slug": "best-shower-curtains",
-                    "name": "Best Shower Curtains",
-                    "domain": "best-shower-curtains.com",
-                    "status": "active",
-                    "colors": {
-                        "primary": "#00695C",
-                        "accent": "#FF6F00"
-                    }
-                }
-            ]
-        };
+        // Global data variable
+        let dashboardData = {};
 
-        const bathRugsArticles = [
-            {"title": "Best Memory Foam Bath Rugs 2024", "slug": "best-memory-foam-bath-rugs", "publishDate": "2026-02-17"},
-            {"title": "Best Bath Rugs for Elderly", "slug": "best-bath-rugs-for-elderly", "publishDate": "2026-02-16"},
-            {"title": "8 Best Bath Rugs for Small Bathrooms", "slug": "best-bath-rugs-for-small-bathrooms", "publishDate": "2026-02-04"},
-            {"title": "7 Best Quick-Dry Bath Rugs", "slug": "best-quick-dry-bath-rugs-for-humid-bathrooms", "publishDate": "2026-02-03"}
-        ];
-
-        const showerCurtainsArticles = [
-            {"title": "Best Fabric Shower Curtains 2024", "slug": "best-fabric-shower-curtains", "publishDate": "2026-02-17"},
-            {"title": "Best Shower Curtains for Mold Prevention", "slug": "best-shower-curtains-mold-prevention", "publishDate": "2026-02-16"},
-            {"title": "Top 7 Best Shower Curtains of 2026", "slug": "top-7-best-shower-curtains-of-2026", "publishDate": "2026-02-01"},
-            {"title": "Fabric vs Vinyl vs PEVA Shower Curtains", "slug": "fabric-vs-vinyl-vs-peva-shower-curtains", "publishDate": "2026-02-02"}
-        ];
+        // Fetch data from data.json
+        async function loadData() {
+            try {
+                const response = await fetch('data.json');
+                dashboardData = await response.json();
+                console.log('✓ Data loaded:', dashboardData.stats);
+            } catch (error) {
+                console.error('Error loading data:', error);
+                // Fallback data if fetch fails
+                dashboardData = {
+                    "blogs": [],
+                    "stats": { "totalArticles": 0, "totalBlogs": 0 }
+                };
+            }
+        }
 
         // Utils
         function formatDate(dateStr) {
@@ -404,22 +383,31 @@
 
         // Dashboard Data
         function calculateStats() {
-            const allArticles = [...bathRugsArticles, ...showerCurtainsArticles];
-            const totalArticles = allArticles.length;
-            const totalBlogs = blogsRegistry.blogs.length;
-            const activeBlogs = blogsRegistry.blogs.filter(b => b.status === 'active').length;
+            const stats = dashboardData.stats || { totalArticles: 0, totalBlogs: 0 };
+            const blogs = dashboardData.blogs || [];
+            
+            // Get all articles
+            const allArticles = [];
+            blogs.forEach(blog => {
+                if (blog.articles) {
+                    allArticles.push(...blog.articles.map(art => ({ ...art, blog: blog.name })));
+                }
+            });
+
+            const totalArticles = stats.totalArticles || 0;
+            const totalBlogs = stats.totalBlogs || 0;
+            const activeBlogs = blogs.filter(b => b.status === 'active').length;
 
             // Last article dates
-            const bathRugsLatest = new Date(bathRugsArticles[0].publishDate);
-            const curtainsLatest = new Date(showerCurtainsArticles[0].publishDate);
+            const latestArticles = allArticles.sort((a, b) => new Date(b.publishDate) - new Date(a.publishDate));
+            const latestDate = latestArticles.length > 0 ? new Date(latestArticles[0].publishDate) : new Date();
 
             return {
                 totalArticles,
                 totalBlogs,
                 activeBlogs,
-                bathRugsLatest,
-                curtainsLatest,
-                allArticles: allArticles.sort((a, b) => new Date(b.publishDate) - new Date(a.publishDate))
+                latestDate,
+                allArticles: latestArticles
             };
         }
 
@@ -451,7 +439,7 @@
                     label: 'Dernier Article',
                     value: 'Aujourd\'hui',
                     subtitle: 'mis à jour en temps réel',
-                    status: getDaysSince(bathRugsArticles[0].publishDate) > 1 ? 'warning' : 'success'
+                    status: 'success'
                 }
             ];
 
@@ -469,26 +457,21 @@
 
         // Render Articles
         function renderArticles() {
-            const stats = calculateStats();
             const container = document.getElementById('articlesContainer');
-
-            const blogs = [
-                { name: 'Best Bath Rugs', articles: bathRugsArticles, color: '#FF7043' },
-                { name: 'Best Shower Curtains', articles: showerCurtainsArticles, color: '#FF6F00' }
-            ];
+            const blogs = dashboardData.blogs || [];
 
             container.innerHTML = blogs.map(blog => `
                 <div class="blog-articles">
-                    <div class="blog-name" style="border-bottom-color: ${blog.color}33;">
-                        ${blog.name} (${blog.articles.length} articles)
+                    <div class="blog-name" style="border-bottom-color: ${blog.colors?.accent || '#4F46E5'}33;">
+                        ${blog.name} (${blog.articles?.length || 0} articles)
                     </div>
-                    ${blog.articles.slice(0, 5).map(article => `
-                        <div class="article-item" style="border-left-color: ${blog.color};">
+                    ${(blog.articles || []).slice(0, 10).map(article => `
+                        <div class="article-item" style="border-left-color: ${blog.colors?.accent || '#6366F1'};">
                             <div class="article-title">📄 ${article.title}</div>
                             <div class="article-meta">
                                 <span>📅 ${formatDate(article.publishDate)}</span>
-                                <span>⏱️ ${getDaysSince(article.publishDate)} jour${getDaysSince(article.publishDate) > 1 ? 's' : ''} ago</span>
-                                <span><a href="https://${blog.name === 'Best Bath Rugs' ? 'bestbathrugs.com' : 'best-shower-curtains.com'}/${article.slug}" target="_blank" style="color: ${blog.color}; text-decoration: none;">🔗 Voir l'article →</a></span>
+                                <span>⏱️ ${getDaysSince(article.publishDate)} jour${getDaysSince(article.publishDate) !== 1 ? 's' : ''} ago</span>
+                                <span><a href="https://${blog.domain}/${article.slug}" target="_blank" style="color: ${blog.colors?.accent || '#4F46E5'}; text-decoration: none;">🔗 Voir →</a></span>
                             </div>
                         </div>
                     `).join('')}
@@ -498,10 +481,25 @@
 
         // Render Charts
         function renderCharts() {
+            // Calculate articles per day
+            const stats = calculateStats();
+            const articlesPerDay = {};
+            
+            stats.allArticles.forEach(article => {
+                const date = new Date(article.publishDate);
+                const today = new Date('2026-02-18');
+                const diff = today.getTime() - date.getTime();
+                const daysAgo = Math.floor(diff / (1000 * 60 * 60 * 24));
+                if (daysAgo <= 6) {
+                    const key = `J-${daysAgo}`;
+                    articlesPerDay[key] = (articlesPerDay[key] || 0) + 1;
+                }
+            });
+
             // Articles chart
             const ctx1 = document.getElementById('articlesChart').getContext('2d');
             const days = ['J-6', 'J-5', 'J-4', 'J-3', 'J-2', 'J-1', 'Aujourd\'hui'];
-            const data = [1, 0, 1, 0, 1, 1, 2]; // Approximation based on dates
+            const data = days.map(day => articlesPerDay[day] || 0);
 
             new Chart(ctx1, {
                 type: 'line',
@@ -544,12 +542,16 @@
 
             // Distribution chart
             const ctx2 = document.getElementById('distributionChart').getContext('2d');
+            const blogs = dashboardData.blogs || [];
+            const blogLabels = blogs.map(b => b.name);
+            const blogData = blogs.map(b => b.articles?.length || 0);
+
             new Chart(ctx2, {
                 type: 'doughnut',
                 data: {
-                    labels: ['Best Bath Rugs', 'Best Shower Curtains'],
+                    labels: blogLabels,
                     datasets: [{
-                        data: [bathRugsArticles.length, showerCurtainsArticles.length],
+                        data: blogData,
                         backgroundColor: ['#4F46E5', '#6366F1'],
                         borderColor: '#ffffff',
                         borderWidth: 2
@@ -574,16 +576,19 @@
         }
 
         // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', async function() {
+            await loadData();
             updateTimestamp();
             renderKPIs();
             renderArticles();
             renderCharts();
 
-            // Refresh every minute
-            setInterval(() => {
+            // Refresh every 30 seconds
+            setInterval(async () => {
+                await loadData();
                 updateTimestamp();
-            }, 60000);
+                // Don't re-render everything to avoid flickering
+            }, 30000);
         });
     </script>
 </body>
